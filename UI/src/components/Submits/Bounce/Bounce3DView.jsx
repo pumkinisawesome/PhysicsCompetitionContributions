@@ -19,28 +19,28 @@ export class Bounce3DView extends React.Component {
    static steelMat = ImageUtil.createMaterial(0xffffff, {
       root: 'steelPlate',
       normal: 'steelplate1_normal-dx.png',
-      displacement: { file: 'steelplate1_height.png', scale: 0.1 },
+      displacement: {file: 'steelplate1_height.png', scale: 0.1},
       roughness: 'steelplate1_roughness.png',
       ao: 'steelplate1_ao.png',
-      metal: { file: 'steelplate1_metallic.png', metalness: 0.5 },
+      metal: {file: 'steelplate1_metallic.png', metalness: 0.5},
       side: THREE.DoubleSide,
-      reps: { x: 5, y: 5 }
+      reps: {x: 5, y: 5}
    });
 
    static concreteMat = ImageUtil.createMaterial(0x5C5C5C, {
       root: 'concrete',
       normal: 'normal.jpg',
-      displacement: { file: 'displacement.png', scale: 0.1 },
+      displacement: {file: 'displacement.png', scale: 0.1},
       roughness: 'roughness.jpg',
       ao: 'ao.jpg',
-      metal: { file: 'basecolor.jpg', metalness: 0.5 },
+      metal: {file: 'basecolor.jpg', metalness: 0.5},
       side: THREE.DoubleSide
    });
 
    static flatSteelMat = ImageUtil.createMaterial(0xffffff, {
       root: 'flatSteel',
       roughness: 'roughnessMap.png',
-      metal: { file: 'metalMap.png', metalness: 0.5 },
+      metal: {file: 'metalMap.png', metalness: 0.5},
       side: THREE.DoubleSide
    });
 
@@ -51,7 +51,7 @@ export class Bounce3DView extends React.Component {
    constructor(props) {
       super(props);
 
-      this.ping = new UIfx(pingAudio, { volume: 0.5, throttleMs: 100 });
+      this.ping = new UIfx(pingAudio, {volume: 0.5, throttleMs: 100});
 
       this.state = Bounce3DView.setOffset(
          Bounce3DView.getInitState(props.movie), props.offset);
@@ -91,7 +91,7 @@ export class Bounce3DView extends React.Component {
       var scene = new THREE.Scene();
 
       // CAS Fix: Try moving renderer out of state
-      var renderer = new THREE.WebGLRenderer({ antialias: true });
+      var renderer = new THREE.WebGLRenderer({antialias: true});
       renderer.shadowMap.enabled = true;
 
       var camera = new THREE.PerspectiveCamera(40, 1, .01, 10 * rigSize);
@@ -311,7 +311,7 @@ export class Bounce3DView extends React.Component {
       this.state.renderer.render(this.state.scene, this.state.camera);
       return (
          <div
-            style={{ height: "600px", width: "100%" }}
+            style={{height: "600px", width: "100%"}}
             ref={(mount) => {
                this.mount = mount;
             }}
