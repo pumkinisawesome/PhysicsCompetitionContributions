@@ -101,7 +101,8 @@ export class Bounce3DView extends React.Component {
       var light = new THREE.PointLight(0xffffff, 1);
       light.position.set(rigSize / 2, rigSize / 2, rigSize / 2);
       light.castShadow = true;
-      scene.add(light).add(new THREE.AmbientLight(0x404040));  // Plus general ambient
+      // Plus general ambient
+      scene.add(light).add(new THREE.AmbientLight(0x404040));
 
       var room = this.buildRoom();
       room.name = 'room'
@@ -189,8 +190,9 @@ export class Bounce3DView extends React.Component {
       this.state.camera.updateProjectionMatrix();
       this.mount.appendChild(this.state.renderer.domElement);
 
-      var cameraBounds = new THREE.Box3(new THREE.Vector3(rigSize - 24, rigSize - 19,
-         rigSize - 8), new THREE.Vector3(rigSize + 4, rigSize + 4, rigSize + 5))
+      var cameraBounds = new THREE.Box3(new THREE.Vector3(rigSize - 24,
+         rigSize - 19, rigSize - 8), new THREE.Vector3(rigSize + 4, rigSize + 4,
+         rigSize + 5))
 
       cameraControls = new CameraControls(
          this.state.camera,
@@ -228,7 +230,7 @@ export class Bounce3DView extends React.Component {
    // from |movie| so incremental change is appropriate.  Return adjusted state
    static setOffset(state, timeStamp) {
       const ballRadius = Bounce3DView.ballRadius;
-      let { targets, ball, evtIdx, scene, rig, camera, renderer, movie, } = state;
+      let {targets, ball, evtIdx, scene, rig, camera, renderer, movie} = state;
       let evts = movie.evts;
       let yTop = movie.background.height;
       let evt;
