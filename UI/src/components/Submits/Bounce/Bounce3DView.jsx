@@ -258,7 +258,7 @@ export class Bounce3DView extends React.Component {
             ball.position.set(evt.x, evt.y, ballRadius);
 
             if (evt.type === BounceMovie.cHitTarget) {
-               targets[evt.targetId].position.z = -2 * ballRadius; // Pop in
+               targets[evt.targetId].position.z = -2 * ballRadius;
                // Play pin sound.
             }
          }
