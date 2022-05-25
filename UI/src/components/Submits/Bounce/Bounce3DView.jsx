@@ -282,9 +282,10 @@ export class Bounce3DView extends React.Component {
             || evt.type === BounceMovie.cHitBarrier
             || evt.type === BounceMovie.cHitTarget) {
             ball.position.set(evt.x, evt.y, ballRadius);
-
-            if (evt.type === BounceMovie.cHitTarget)
-               targets[evt.targetId].position.z = ballRadius;  // Pop target out
+         }
+         if (evt.type === BounceMovie.cTargetFade) {
+            targets[evt.targetId].position.z          // Move target to current
+             = 3 * ballRadius * (1 - evt.fadeLevel);  // fade position
          }
          if (evt.type === BounceMovie.cBallLaunch)
             ball.position.set(0, Bounce3DView.rigSize, ballRadius);
@@ -313,4 +314,3 @@ export class Bounce3DView extends React.Component {
          ></div>
       )
    }
-}
