@@ -211,11 +211,6 @@ export class Bounce3DView extends React.Component {
       this.state.renderer.render(this.state.scene, this.state.camera);
    }
 
-   // Return label for button activating this view
-   static getLabel() {
-      return "3D";
-   }
-
    static getDerivedStateFromProps(newProps, oldState) {
       let rtn = oldState;
 
