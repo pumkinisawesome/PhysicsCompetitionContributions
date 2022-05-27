@@ -1,0 +1,170 @@
+<!--
+   This test program is designed to be run using the VSCode extension Live
+   Server. This allows html files to be test ran in the browser quickly and
+   easily. 
+
+   This uses WebXR to add XR functionality to three.js scenes. This can be
+   tested in the browser by using the WebXR API Emulator extension on Chrome
+   or any other Chromium based browser. It can be run on an Oculus/Meta Quest
+   by installing Android Debug Bridge to your computer, plugging in the headset
+   and running adb reverse tcp:<port> tcp:<port>, where <port> is the port that
+   Live Server is hosting the website through. 
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+   <link rel="stylesheet" type="text/css" href="style.css">
+   <script type="importmap">
+      {
+         "imports": {
+            "three": "https://threejs.org/build/three.module.js",
+            "VRButton": "https://threejs.org/examples/jsm/webxr/VRButton.js",
+            "XRControllerModelFactory": "https://threejs.org/examples/jsm/webxr/XRControllerModelFactory.js"
+         }
+      }
+   </script>
+</head>
+<body>
+   <canvas id="c"></canvas>
+</body>
+<script type="module">
+   import * as THREE from 'three';
+   import { VRButton } from 'VRButton';
+   import { XRControllerModelFactory } from 'XRControllerModelFactory';
+
+   
+   function main() {
+      const canvas = document.querySelector('#c');
+      const renderer = new THREE.WebGLRenderer({canvas});
+      renderer.xr.enabled = true;
+      document.body.appendChild(VRButton.createButton(renderer));
+
+      const fov = 75;
+      const aspect = 2;  // the canvas default
+      const near = 0.1;
+      const far = 50;
+      const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
+      camera.position.set(0, 1.6, 0);
+
+      const scene = new THREE.Scene();
+
+      const controllerModelFactory = new XRControllerModelFactory();
+
+      const controllerGripLeft = renderer.xr.getControllerGrip(0);
+      const modelLeft = controllerModelFactory.
+       createControllerModel( controllerGripLeft );
+      controllerGripLeft.add( modelLeft );
+      scene.add( controllerGripLeft );
+
+      const controllerGripRight = renderer.xr.getControllerGrip(1);
+      const modelRight = controllerModelFactory.
+       createControllerModel( controllerGripRight );
+      controllerGripRight.add( modelRight );
+      scene.add( controllerGripRight );
+
+      // Right controller
+      const controllerRight = renderer.xr.getController(1);
+      controllerRight.addEventListener('selectstart', onSelectStartRight);
+
+      // Left controller
+      const controllerLeft = renderer.xr.getController(0);
+      controllerLeft.addEventListener('select', onSelectLeft);
+      controllerLeft.addEventListener('squeeze', onSqueezeLeft);
+
+      
+
+      {
+         const color = 0xFFFFFF;
+         const intensity = 1;
+         const light = new THREE.DirectionalLight(color, intensity);
+         light.position.set(-1, 2, 4);
+         scene.add(light);
+      }
+
+      let speedMultiplier = 1;
+
+      function onSelectLeft(event) {
+         console.log(event);
+         speedMultiplier *= 2;
+      }
+
+      function onSqueezeLeft(event) {
+         console.log(event);
+         speedMultiplier /= 2;
+      }
+
+      let simTime = 0;
+      let simStartTime = 0;
+
+      function onSelectStartRight(event) {
+         simStartTime = simTime;
+         console.log(simStartTime);
+      }
+
+
+
+      const boxWidth = 1;
+      const boxHeight = 1;
+      const boxDepth = 1;
+      const geometry = new THREE.BoxGeometry(boxWidth, boxHeight, boxDepth);
+
+      function makeInstance(geometry, color, x) {
+         const material = new THREE.MeshPhongMaterial({color});
+
+         const cube = new THREE.Mesh(geometry, material);
+         scene.add(cube);
+
+         cube.position.x = x;
+         cube.position.y = 1.6;
+         cube.position.z = -2;
+
+         return cube;
+      }
+
+      const cubes = [
+         makeInstance(geometry, 0x44aa88,  0),
+         makeInstance(geometry, 0x8844aa, -2),
+         makeInstance(geometry, 0xaa8844,  2),
+      ];
+
+      function resizeRendererToDisplaySize(renderer) {
+         const canvas = renderer.domElement;
+         const width = canvas.clientWidth;
+         const height = canvas.clientHeight;
+         const needResize = canvas.width !== width || canvas.height !== height;
+         if (needResize) {
+            renderer.setSize(width, height, false);
+         }
+         return needResize;
+      }
+
+      function render(time) {
+         simTime = 0.001 * time - simStartTime;
+         
+
+         if (resizeRendererToDisplaySize(renderer)) {
+            const canvas = renderer.domElement;
+            camera.aspect = canvas.clientWidth / canvas.clientHeight;
+            camera.updateProjectionMatrix();
+         }
+
+         cubes.forEach((cube, ndx) => {
+            const speed = (1 + ndx * .1) * speedMultiplier;
+            const rot = simTime * speed;
+            cube.rotation.x = rot;
+            cube.rotation.y = rot;
+         });
+
+         renderer.render(scene, camera);
+      }
+
+      renderer.setAnimationLoop(render);
+   }
+
+   main();
+   </script>
+</html>
