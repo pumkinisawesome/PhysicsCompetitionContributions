@@ -1,12 +1,12 @@
 import React from 'react';
-import { BounceMovie } from './BounceMovie';
+import {BounceMovie} from './BounceMovie';
 import * as THREE from "three";
 import CameraControls from "camera-controls";
 import pingAudio from '../../../assets/sound/ping.mp3';
 import UIfx from 'uifx';
-import * as ImageUtil from '../../Util/ImageUtil'
-import { DoubleSide } from 'three';
-CameraControls.install({ THREE });
+import {concreteMat, flatSteelMat, steelMat} from '../../Util/Materials.js';
+
+CameraControls.install({THREE});
 
 // Display a room with a "rig" on one wall.  The rig has the launcher, targets,
 // obstacles, and ball.  All 3JS units are meters.
@@ -15,34 +15,6 @@ export class Bounce3DView extends React.Component {
    static clearColor = "#263238"; // General blue-gray background
    static rigSize = 10;           // Rig of targets/obstacles is 10m x 10m.
    static launcherWidth = 1;      // 1m piston launcher on left side of rig
-
-   static steelMat = ImageUtil.createMaterial(0xffffff, {
-      root: 'steelPlate',
-      normal: 'steelplate1_normal-dx.png',
-      displacement: {file: 'steelplate1_height.png', scale: 0.1},
-      roughness: 'steelplate1_roughness.png',
-      ao: 'steelplate1_ao.png',
-      metal: {file: 'steelplate1_metallic.png', metalness: 0.5},
-      side: THREE.DoubleSide,
-      reps: {x: 5, y: 5}
-   });
-
-   static concreteMat = ImageUtil.createMaterial(0x5C5C5C, {
-      root: 'concrete',
-      normal: 'normal.jpg',
-      displacement: {file: 'displacement.png', scale: 0.1},
-      roughness: 'roughness.jpg',
-      ao: 'ao.jpg',
-      metal: {file: 'basecolor.jpg', metalness: 0.5},
-      side: THREE.DoubleSide
-   });
-
-   static flatSteelMat = ImageUtil.createMaterial(0xffffff, {
-      root: 'flatSteel',
-      roughness: 'roughnessMap.png',
-      metal: {file: 'metalMap.png', metalness: 0.5},
-      side: THREE.DoubleSide
-   });
 
    // Props are: {
    //    movie: movie to display
@@ -59,9 +31,6 @@ export class Bounce3DView extends React.Component {
 
    // Create standard room with center of far wall at origin
    static buildRoom() {
-      let concreteMat = Bounce3DView.concreteMat;
-      let flatSteelMat = Bounce3DView.flatSteelMat;
-
       let roomDim = 3 * Bounce3DView.rigSize + 2;  // big boundaries around rig
       let room = new THREE.Mesh(
          new THREE.BoxGeometry(roomDim, roomDim, roomDim), [concreteMat,
@@ -117,13 +86,13 @@ export class Bounce3DView extends React.Component {
       // Make rig a group so we can put origin at lower left front of base
       let rig = new THREE.Group();
       let base = new THREE.Mesh(new THREE.BoxGeometry(rigSize, rigSize,
-         2 * ballRadius), Bounce3DView.steelMat)
+         2 * ballRadius), steelMat)
       base.position.set(rigSize / 2, rigSize / 2, -ballRadius);
       rig.add(base);
       let platform = new THREE.Mesh(new THREE.BoxGeometry(1, .25, 1),
-         Bounce3DView.flatSteelMat)
+         flatSteelMat)
       let ball = new THREE.Mesh(new THREE.SphereGeometry
-         (ballRadius, ballSteps, ballSteps), Bounce3DView.flatSteelMat);
+         (ballRadius, ballSteps, ballSteps), flatSteelMat);
    
       // Put ball at upper left corner of rig, just touching the base.
       ball.position.set(0, rigSize, 2 * ballRadius);
@@ -137,13 +106,13 @@ export class Bounce3DView extends React.Component {
 
       // Put Piston base on the far left of platform
       let pBase = new THREE.Mesh(new THREE.BoxGeometry(pistonHeight,
-          pistonWidth, pistonDepth),Bounce3DView.flatSteelMat);
+          pistonWidth, pistonDepth),flatSteelMat);
       pBase.position.set(pistonX,pistonY,0);
       platform.add(pBase);
 
       // Put Cylinder between piston base and piston face
       let pCyl = new THREE.Mesh(new THREE.CylinderGeometry(cylinderWidth,
-          cylinderHeight, cylinderLength),Bounce3DView.flatSteelMat);
+          cylinderHeight, cylinderLength),flatSteelMat);
       pCyl.position.set(0, 0, 0);
       pCyl.rotateZ(cylinderRotate)
       pCyl.name = 'pCyl'
@@ -151,7 +120,7 @@ export class Bounce3DView extends React.Component {
 
       // Place piston face on the far right side of the cylinder
       let pFace = new THREE.Mesh(new THREE.BoxGeometry(pistonHeight,
-          faceWidth, pistonDepth),Bounce3DView.flatSteelMat);
+          faceWidth, pistonDepth),flatSteelMat);
 
       pFace.position.set(0, -.25, 0)
       pCyl.add(pFace);
@@ -240,7 +209,7 @@ export class Bounce3DView extends React.Component {
             let width = evt.hiX - evt.loX;
             let height = evt.hiY - evt.loY;
             let obj = new THREE.Mesh(new THREE.BoxGeometry(width, height,
-               6 * ballRadius), Bounce3DView.flatSteelMat);
+               6 * ballRadius), flatSteelMat);
 
             obj.position.set(evt.loX + width / 2, evt.loY + height / 2,
                3 * ballRadius);
