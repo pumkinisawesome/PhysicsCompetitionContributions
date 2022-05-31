@@ -37,7 +37,7 @@ class ControllerPickHelper extends THREE.EventDispatcher {
          scene.add(controller);
 
          const controllerModelFactory = new XRControllerModelFactory();
-         const controllerGrip = renderer.xr.getControllerGrip(1);
+         const controllerGrip = renderer.xr.getControllerGrip(i);
          const model = controllerModelFactory.
           createControllerModel( controllerGrip );
          controllerGrip.add( model );
