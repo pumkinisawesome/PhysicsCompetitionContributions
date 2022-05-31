@@ -5,18 +5,13 @@ import CameraControls from "camera-controls";
 import pingAudio from '../../../assets/sound/ping.mp3';
 import UIfx from 'uifx';
 import {concreteMat, flatSteelMat, steelMat} from '../../Util/Materials.js';
-import {BounceSceneGraph} from './BounceSceneGraph';
+import {BounceSceneGroup} from './BounceSceneGroup';
 
 CameraControls.install({THREE});
 
 // Display a room with a "rig" on one wall.  The rig has the launcher, targets,
 // obstacles, and ball.  All 3JS units are meters.
 export class Bounce3DView extends React.Component {
-   static ballRadius = .1;        // Ball has 10cm radius
-   static clearColor = "#263238"; // General blue-gray background
-   static rigSize = 10;           // Rig of targets/obstacles is 10m x 10m.
-   static launcherWidth = 1;      // 1m piston launcher on left side of rig
-
    // Props are: {
    //    movie: movie to display
    //    offset: time offset from movie start in sec
@@ -30,33 +25,32 @@ export class Bounce3DView extends React.Component {
          Bounce3DView.getInitState(props.movie), props.offset);
    }
 
-   // Create standard room with center of far wall at origin
-/*    static buildRoom() {
-      let roomDim = 3 * Bounce3DView.rigSize + 2;  // big boundaries around rig
-      let room = new THREE.Mesh(
-         new THREE.BoxGeometry(roomDim, roomDim, roomDim), [concreteMat,
-         concreteMat, concreteMat, flatSteelMat, concreteMat, concreteMat]);
-
-      room.position.set(0, 0, 9); 
-
-      return room;
-   } */
-
    // Return state displaying background grid and other fixtures
    // appropriate for |movie|.  
    static getInitState(movie) {
-      let sceneGraph = new BounceSceneGraph(movie);
+      const rigSize = BounceSceneGroup.rigSize;
+      let scene = new THREE.Scene();
+      let sceneGroup = new BounceSceneGroup(movie);
+      scene.add(sceneGroup.getSceneGroup());
+
+      // Full range, square-decay, white light high on near wall in center
+      let light = new THREE.PointLight(0xffffff, 1);
+      light.position.set(rigSize / 2, rigSize / 2, rigSize / 2);
+      light.castShadow = true;
+      // Plus general ambient
+      scene.add(light).add(new THREE.AmbientLight(0x404040));
 
       // CAS Fix: Try moving renderer out of state
       let renderer = new THREE.WebGLRenderer({antialias: true});
       renderer.shadowMap.enabled = true;
 
       let camera = new THREE.PerspectiveCamera(
-       40, 1, .01, 10 * BounceSceneGraph.rigSize);
+       40, 1, .01, 10 * BounceSceneGroup.rigSize);
       camera.position.set(0, 0, 15);  // Center of near wall
 
       return {
-         sceneGraph,
+         scene,
+         sceneGroup,
          camera,
          renderer,
          movie
@@ -72,7 +66,7 @@ export class Bounce3DView extends React.Component {
    componentDidMount() {
       const width = this.mount.clientWidth;
       const height = this.mount.clientHeight;
-      let rigSize = BounceSceneGraph.rigSize;
+      let rigSize = BounceSceneGroup.rigSize;
       let cameraControls;
 
       this.state.renderer.setSize(width, height);
@@ -96,12 +90,14 @@ export class Bounce3DView extends React.Component {
       cameraControls.addEventListener("control", () => {
          cameraControls.update(1);   // Needed w/nonzero param
          this.state.renderer.render(
-          this.state.sceneGraph.getSceneGraph(), this.state.camera);
+          this.state.sceneGroup.getSceneGroup(), this.state.camera);
       });
 
       cameraControls.setTarget(0, 0, 0);  // Center of rig
+
+      // Do a render
       this.state.renderer.render(
-       this.state.sceneGraph.getSceneGraph(), this.state.camera);
+       this.state.scene, this.state.camera);
    }
 
    static getDerivedStateFromProps(newProps, oldState) {
@@ -117,10 +113,11 @@ export class Bounce3DView extends React.Component {
    // in |movie| with time <= |timeStamp|.  Assume existing |state| was built
    // from |movie| so incremental change is appropriate.  Return adjusted state
    static setOffset(state, timeStamp) {
-      let {sceneGraph, camera, renderer, movie} = state;
-      sceneGraph.setOffset(timeStamp);
+      let {scene, sceneGroup, camera, renderer, movie} = state;
+      sceneGroup.setOffset(timeStamp);
       return {
-         sceneGraph,
+         scene,
+         sceneGroup,
          camera,
          renderer,
          movie
@@ -128,7 +125,7 @@ export class Bounce3DView extends React.Component {
    }
 
    render() {
-      this.state.renderer.render(this.state.sceneGraph.getSceneGraph(), this.state.camera);
+      this.state.renderer.render(this.state.scene, this.state.camera);
       return (
          <div
             style={{height: "600px", width: "100%"}}
