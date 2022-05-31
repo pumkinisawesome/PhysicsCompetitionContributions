@@ -3,7 +3,8 @@ import { BounceMovie } from './BounceMovie';
 import * as THREE from 'three';
 import * as ImageUtil from '../../Util/ImageUtil';
 import { VRButton } from 'three/examples/jsm/webxr/VRButton.js';
-import { XRControllerModelFactory } from 'three/examples/jsm/webxr/XRControllerModelFactory.js';
+import { XRControllerModelFactory } from
+ 'three/examples/jsm/webxr/XRControllerModelFactory.js';
 
 class ControllerPickHelper extends THREE.EventDispatcher {
    constructor(scene, renderer) {
@@ -110,7 +111,9 @@ export class BounceVRView extends React.Component {
    static getInitState(movie) {
       const renderer = new THREE.WebGLRenderer({antialias: true});
       renderer.xr.enabled = true;
-      document.body.appendChild(VRButton.createButton(renderer));
+      const button = VRButton.createButton(renderer);
+      document.body.appendChild(button);
+
 
       const fov = 75;
       const aspect = 2;  // the canvas default
@@ -200,6 +203,7 @@ export class BounceVRView extends React.Component {
          cubes,
          controllerHelper,
          pickRoot,
+         button,
          // ball,
          // targets: [],  // Array of target scene elements indexed by trg id
          // evtIdx: -1,
@@ -220,6 +224,10 @@ export class BounceVRView extends React.Component {
        .renderFrame(time, this.state)});
    }
 
+   componentWillUnmount() {
+      this.state.button.remove();
+   }
+
    static resizeRendererToDisplaySize(renderer) {
       const canvas = renderer.domElement;
       const width = canvas.clientWidth;
@@ -233,10 +241,6 @@ export class BounceVRView extends React.Component {
 
    static renderFrame(time, state) {
       time = 0.001 * time;
-
-      // console.log(time);
-
-      // console.log(state);
 
       if (BounceVRView.resizeRendererToDisplaySize(state.renderer)) {
          const canvas = state.renderer.domElement;
@@ -264,7 +268,10 @@ export class BounceVRView extends React.Component {
             ref={(mount) => {
                this.mount = mount;
             }}
-         ></div>
+         >
+            {/* {this.state.button || ""} */}
+            {/* <VRButton></VRButton> */}
+         </div>
       )
    }
 }
