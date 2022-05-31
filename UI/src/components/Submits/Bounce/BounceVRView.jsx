@@ -233,6 +233,8 @@ export class BounceVRView extends React.Component {
       const height = this.mount.clientHeight;
       let rigSize = BounceSceneGroup.rigSize;
 
+      this.state.renderer.setSize(width, height);
+
       this.state.camera.aspect = width / height;
       this.state.camera.updateProjectionMatrix();
       this.mount.appendChild(this.state.renderer.domElement);
