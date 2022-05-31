@@ -129,7 +129,6 @@ export class BounceVRView extends React.Component {
       const renderer = new THREE.WebGLRenderer({antialias: true});
       renderer.xr.enabled = true;
       const button = VRButton.createButton(renderer);
-      document.body.appendChild(button);
 
 
       const fov = 75;
@@ -239,8 +238,11 @@ export class BounceVRView extends React.Component {
       this.state.camera.updateProjectionMatrix();
       this.mount.appendChild(this.state.renderer.domElement);
 
-      this.state.renderer.setAnimationLoop(time => {BounceVRView
-       .renderFrame(time, this.state)});
+      this.state.renderer.setAnimationLoop(time => {
+         BounceVRView.renderFrame(time, this.state);
+      });
+
+      this.mount.appendChild(this.state.button);
    }
 
    componentWillUnmount() {
