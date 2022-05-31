@@ -90,7 +90,7 @@ export class Bounce3DView extends React.Component {
       cameraControls.addEventListener("control", () => {
          cameraControls.update(1);   // Needed w/nonzero param
          this.state.renderer.render(
-          this.state.sceneGroup.getSceneGroup(), this.state.camera);
+          this.state.scene, this.state.camera);
       });
 
       cameraControls.setTarget(0, 0, 0);  // Center of rig
