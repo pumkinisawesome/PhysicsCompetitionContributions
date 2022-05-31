@@ -5,6 +5,7 @@ import CameraControls from "camera-controls";
 import pingAudio from '../../../assets/sound/ping.mp3';
 import UIfx from 'uifx';
 import {concreteMat, flatSteelMat, steelMat} from '../../Util/Materials.js';
+import {BounceSceneGraph} from './BounceSceneGraph';
 
 CameraControls.install({THREE});
 
@@ -30,7 +31,7 @@ export class Bounce3DView extends React.Component {
    }
 
    // Create standard room with center of far wall at origin
-   static buildRoom() {
+/*    static buildRoom() {
       let roomDim = 3 * Bounce3DView.rigSize + 2;  // big boundaries around rig
       let room = new THREE.Mesh(
          new THREE.BoxGeometry(roomDim, roomDim, roomDim), [concreteMat,
@@ -39,104 +40,25 @@ export class Bounce3DView extends React.Component {
       room.position.set(0, 0, 9); 
 
       return room;
-   }
+   } */
 
    // Return state displaying background grid and other fixtures
    // appropriate for |movie|.  
    static getInitState(movie) {
-      const rigSize = Bounce3DView.rigSize;
-      const ballRadius = Bounce3DView.ballRadius
-      const ballSteps = 16;
-      const pistonHeight = .5;
-      const pistonWidth = .5;
-      const pistonDepth = 1;
-      const pistonX = -.25;
-      const pistonY =.25;
-      const cylinderWidth =.1;
-      const cylinderHeight = .1;
-      const cylinderLength = .5;
-      const cylinderRotate = 1.5708;
-      const faceWidth =.1;
-      let scene = new THREE.Scene();
+      let sceneGraph = new BounceSceneGraph(movie);
 
       // CAS Fix: Try moving renderer out of state
       let renderer = new THREE.WebGLRenderer({antialias: true});
       renderer.shadowMap.enabled = true;
 
-      let camera = new THREE.PerspectiveCamera(40, 1, .01, 10 * rigSize);
+      let camera = new THREE.PerspectiveCamera(
+       40, 1, .01, 10 * BounceSceneGraph.rigSize);
       camera.position.set(0, 0, 15);  // Center of near wall
 
-      // Full range, square-decay, white light high on near wall in center
-      let light = new THREE.PointLight(0xffffff, 1);
-      light.position.set(rigSize / 2, rigSize / 2, rigSize / 2);
-      light.castShadow = true;
-      // Plus general ambient
-      scene.add(light).add(new THREE.AmbientLight(0x404040));
-
-      let room = this.buildRoom();
-      room.name = 'room'
-      scene.add(room);
-
-      // Add a launcher at upper-left corner of rig. Flat horizontal steel plate
-      //   with right edge at origin launch point minus .1m, so a ball can be
-      //   set on the right edge of plate with center at precise upper left 
-      //   corner of rig (0, 10).  On plate is a steel piston arrangement that 
-      //   snaps forward to hit and launch the ball.
-
-      // Make rig a group so we can put origin at lower left front of base
-      let rig = new THREE.Group();
-      let base = new THREE.Mesh(new THREE.BoxGeometry(rigSize, rigSize,
-         2 * ballRadius), steelMat)
-      base.position.set(rigSize / 2, rigSize / 2, -ballRadius);
-      rig.add(base);
-      let platform = new THREE.Mesh(new THREE.BoxGeometry(1, .25, 1),
-         flatSteelMat)
-      let ball = new THREE.Mesh(new THREE.SphereGeometry
-         (ballRadius, ballSteps, ballSteps), flatSteelMat);
-   
-      // Put ball at upper left corner of rig, just touching the base.
-      ball.position.set(0, rigSize, 2 * ballRadius);
-      ball.castShadow = true;
-      rig.add(ball);
-
-      // Put platform at upper left corner of rig, just below the ball
-      platform.position.set(-.5, rigSize - .25, 0)
-      platform.castshadow = true;
-      rig.add(platform);
-
-      // Put Piston base on the far left of platform
-      let pBase = new THREE.Mesh(new THREE.BoxGeometry(pistonHeight,
-          pistonWidth, pistonDepth),flatSteelMat);
-      pBase.position.set(pistonX,pistonY,0);
-      platform.add(pBase);
-
-      // Put Cylinder between piston base and piston face
-      let pCyl = new THREE.Mesh(new THREE.CylinderGeometry(cylinderWidth,
-          cylinderHeight, cylinderLength),flatSteelMat);
-      pCyl.position.set(0, 0, 0);
-      pCyl.rotateZ(cylinderRotate)
-      pCyl.name = 'pCyl'
-      pBase.add(pCyl);
-
-      // Place piston face on the far right side of the cylinder
-      let pFace = new THREE.Mesh(new THREE.BoxGeometry(pistonHeight,
-          faceWidth, pistonDepth),flatSteelMat);
-
-      pFace.position.set(0, -.25, 0)
-      pCyl.add(pFace);
-
-      // Put rig at back of room.  Assume room origin at center of back wall
-      rig.position.set(-rigSize / 2, -rigSize / 2, 2 * ballRadius);
-      scene.add(rig);
-
       return {
-         scene,
-         rig,
+         sceneGraph,
          camera,
          renderer,
-         ball,
-         targets: [],  // Array of target scene elements indexed by trg id
-         evtIdx: -1,
          movie
       };
    }
@@ -150,7 +72,7 @@ export class Bounce3DView extends React.Component {
    componentDidMount() {
       const width = this.mount.clientWidth;
       const height = this.mount.clientHeight;
-      let rigSize = Bounce3DView.rigSize;
+      let rigSize = BounceSceneGraph.rigSize;
       let cameraControls;
 
       this.state.renderer.setSize(width, height);
@@ -173,11 +95,13 @@ export class Bounce3DView extends React.Component {
 
       cameraControls.addEventListener("control", () => {
          cameraControls.update(1);   // Needed w/nonzero param
-         this.state.renderer.render(this.state.scene, this.state.camera);
+         this.state.renderer.render(
+          this.state.sceneGraph.getSceneGraph(), this.state.camera);
       });
 
       cameraControls.setTarget(0, 0, 0);  // Center of rig
-      this.state.renderer.render(this.state.scene, this.state.camera);
+      this.state.renderer.render(
+       this.state.sceneGraph.getSceneGraph(), this.state.camera);
    }
 
    static getDerivedStateFromProps(newProps, oldState) {
@@ -193,87 +117,18 @@ export class Bounce3DView extends React.Component {
    // in |movie| with time <= |timeStamp|.  Assume existing |state| was built
    // from |movie| so incremental change is appropriate.  Return adjusted state
    static setOffset(state, timeStamp) {
-      const ballRadius = Bounce3DView.ballRadius;
-      let {targets, ball, evtIdx, scene, rig, camera, renderer, movie} = state;
-      let evts = movie.evts;
-      let yTop = movie.background.height;
-      let evt;
-      let pCyl = scene.getObjectByName('pCyl', true)
-
-      // While the event after evtIdx exists and needs adding to 3DElms
-      while (evtIdx + 1 < evts.length && evts[evtIdx + 1].time <= timeStamp) {
-         evt = evts[++evtIdx];
-         if (evt.type === BounceMovie.cMakeBarrier
-            || evt.type === BounceMovie.cMakeTarget) {
-            // Add the indicated barrier to the scene
-            let width = evt.hiX - evt.loX;
-            let height = evt.hiY - evt.loY;
-            let obj = new THREE.Mesh(new THREE.BoxGeometry(width, height,
-               6 * ballRadius), flatSteelMat);
-
-            obj.position.set(evt.loX + width / 2, evt.loY + height / 2,
-               3 * ballRadius);
-            rig.add(obj);
-            if (evt.type === BounceMovie.cMakeTarget) {
-               targets[evt.id] = obj;
-            }
-         }
-         else if (evt.type === BounceMovie.cBallPosition
-            || evt.type === BounceMovie.cHitBarrier
-            || evt.type === BounceMovie.cHitTarget) {
-            ball.position.set(evt.x, evt.y, ballRadius);
-
-            if (evt.type === BounceMovie.cHitTarget) {
-               targets[evt.targetId].position.z = -2 * ballRadius;
-               // Play pin sound.
-            }
-         }
-         else if (evt.type === BounceMovie.cBallExit)
-            ball.position.set(0, Bounce3DView.rigSize, ballRadius);
-         else if (evt.type === BounceMovie.cBallLaunch) {
-            // Make Launcher fire by moving piston
-            pCyl.position.set(.4, 0, 0);
-            // Delayed animation to retract piston.
-            setTimeout(() => {
-               pCyl.position.set(0, 0, 0)
-            }, 300);
-         }
-      }
-
-      // Undo events to move backward in time. (Note that this and the prior
-      // while condition are mutually exclusive.) Assume that barrier and
-      // target creation occur at negative time and thus will not be "backed
-      // over"
-      while (evtIdx > 0 && timeStamp < evts[evtIdx].time) {
-         evt = evts[evtIdx--];
-
-         if (evt.type === BounceMovie.cBallPosition
-            || evt.type === BounceMovie.cHitBarrier
-            || evt.type === BounceMovie.cHitTarget) {
-            ball.position.set(evt.x, evt.y, ballRadius);
-         }
-         if (evt.type === BounceMovie.cTargetFade) {
-            targets[evt.targetId].position.z          // Move target to current
-             = 3 * ballRadius * (1 - evt.fadeLevel);  // fade position
-         }
-         if (evt.type === BounceMovie.cBallLaunch)
-            ball.position.set(0, Bounce3DView.rigSize, ballRadius);
-      }
-
+      let {sceneGraph, camera, renderer, movie} = state;
+      sceneGraph.setOffset(timeStamp);
       return {
-         scene,
-         rig,
+         sceneGraph,
          camera,
          renderer,
-         ball,
-         targets,   // Array of target scene elements indexed by trg id
-         evtIdx,
          movie
-      };
+      }
    }
 
    render() {
-      this.state.renderer.render(this.state.scene, this.state.camera);
+      this.state.renderer.render(this.state.sceneGraph.getSceneGraph(), this.state.camera);
       return (
          <div
             style={{height: "600px", width: "100%"}}
