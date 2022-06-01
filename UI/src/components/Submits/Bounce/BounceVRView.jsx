@@ -11,7 +11,6 @@ class ControllerPickHelper extends THREE.EventDispatcher {
    constructor(scene, renderer) {
       super();
       this.raycaster = new THREE.Raycaster();
-      this.objectToColorMap = new Map();
       this.controllerToObjectMap = new Map();
       this.tempMatrix = new THREE.Matrix4();
 
@@ -57,12 +56,9 @@ class ControllerPickHelper extends THREE.EventDispatcher {
    }
 
    _reset() {
-      // restore the colors
-      this.objectToColorMap.forEach((color, object) => {
-         object.material.emissive.setHex(color);
-      });
-      this.objectToColorMap.clear();
-      this.controllerToObjectMap.clear();
+      for (const {line} of this.controllers) {
+         line.material.color.setHex(0xFFFFFF);
+      }
    }
 
    update(pickablesParent, time) {
@@ -70,13 +66,13 @@ class ControllerPickHelper extends THREE.EventDispatcher {
       for (const {controller, line} of this.controllers) {
          // cast a ray through the from the controller
          this.tempMatrix.identity().extractRotation(controller.matrixWorld);
-         this.raycaster.ray.origin.setFromMatrixPosition(controller
-          .matrixWorld);
-         this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this
-          .tempMatrix);
+         this.raycaster.ray.origin.setFromMatrixPosition(
+          controller.matrixWorld);
+         this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(
+          this.tempMatrix);
          // get the list of objects the ray intersected
-         const intersections = this.raycaster.intersectObjects(pickablesParent
-          .children);
+         const intersections = this.raycaster.intersectObjects(
+          pickablesParent.children);
          if (intersections.length) {
             const intersection = intersections[0];
             // make the line touch the object
@@ -85,15 +81,8 @@ class ControllerPickHelper extends THREE.EventDispatcher {
             const pickedObject = intersection.object;
             // save which object this controller picked
             this.controllerToObjectMap.set(controller, pickedObject);
-            // highlight the object if we haven't already
-            if (this.objectToColorMap.get(pickedObject) === undefined) {
-               // save its color
-               this.objectToColorMap.set(pickedObject,
-                pickedObject.material.emissive.getHex());
-               // set its emissive color to flashing red/yellow
-               pickedObject.material.emissive.setHex((time * 8)
-                % 2 > 1 ? 0xFF2000 : 0xFF0000);
-            }
+            // Set line to flashing red/yellow
+            line.material.color.setHex((time * 8) % 2 > 1 ? 0xFFAA00 : 0xFF0000);
          } else {
             line.scale.z = 5;
          }
@@ -114,9 +103,10 @@ export class BounceVRView extends React.Component {
    // Return state displaying things
    static getInitState(movie) {
       const rigSize = BounceSceneGroup.rigSize;
+      const ballRadius = BounceSceneGroup.ballRadius;
       let scene = new THREE.Scene();
       let sceneGroup = new BounceSceneGroup(movie);
-      sceneGroup.getSceneGroup().position.set(0, 0, -15);
+      sceneGroup.getSceneGroup().position.set(0, 0, -5);
       scene.add(sceneGroup.getSceneGroup());
 
       // Full range, square-decay, white light high on near wall in center
@@ -138,25 +128,49 @@ export class BounceVRView extends React.Component {
       const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
       camera.position.set(0, 1.6, 0);
 
-      // // object to put pickable objects on so we can easily
-      // // separate them from non-pickable objects
-      // const pickRoot = new THREE.Object3D();
-      // scene.add(pickRoot);
+      // Group to contain control objects
+      const controlsGroup = new THREE.Group();
+      controlsGroup.name = 'controlsGroup';
+      scene.add(controlsGroup);
 
-      // const controllerHelper = new ControllerPickHelper(scene, renderer);
-      // const controllerToSelection = new Map();
+      const functionMap = {
+         'buttonLeft': () => {
+            console.log('buttonLeft');
+         },
+         'buttonRight': () => {
+            console.log('buttonRight');
+         }
+      }
 
-      // controllerHelper.addEventListener('selectstart', (event) => {
-      //    const {controller, selectedObject} = event;
-      //    const existingSelection = controllerToSelection.get(controller);
-      //    if (!existingSelection) {
-      //       controllerToSelection.set(controller, {
-      //          object: selectedObject,
-      //          parent: selectedObject.parent,
-      //       });
-      //       controller.attach(selectedObject);
-      //    }
-      // });
+
+      let buttonLeft = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1));
+      buttonLeft.name = 'buttonLeft';
+      buttonLeft.material.color.setHex(0xff0000);
+      buttonLeft.position.set(-1, 0, -5);
+      controlsGroup.add(buttonLeft);
+
+      let buttonRight = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1));
+      buttonRight.name = 'buttonRight';
+      buttonRight.material.color.setHex(0x00ff00);
+      buttonRight.position.set(1, 0, -5);
+      controlsGroup.add(buttonRight);
+
+      const controllerHelper = new ControllerPickHelper(scene, renderer);
+      const controllerToSelection = new Map();
+
+      controllerHelper.addEventListener('selectstart', (event) => {
+         const {controller, selectedObject} = event;
+         const existingSelection = controllerToSelection.get(controller);
+         if (!existingSelection) {
+         //    controllerToSelection.set(controller, {
+         //       object: selectedObject,
+         //       parent: selectedObject.parent,
+         //    });
+         //    console.log(selectedObject);
+         //    controller.attach(selectedObject);
+            functionMap[selectedObject.name]();
+         }
+      });
 
       // controllerHelper.addEventListener('selectend', (event) => {
       //    const {controller} = event;
@@ -217,7 +231,8 @@ export class BounceVRView extends React.Component {
          camera,
          renderer,
          // cubes,
-         // controllerHelper,
+         controllerHelper,
+         controlsGroup,
          // pickRoot,
          button,
          // ball,
@@ -276,7 +291,7 @@ export class BounceVRView extends React.Component {
       //    cube.rotation.y = rot;
       // });
 
-      // state.controllerHelper.update(state.pickRoot, time);
+      state.controllerHelper.update(state.controlsGroup, time);
 
       state.renderer.render(state.scene, state.camera);
    }
@@ -285,7 +300,7 @@ export class BounceVRView extends React.Component {
       this.state.renderer.render(this.state.scene, this.state.camera);
       return (
          <div
-            style={{height: "600px", width: "100%"}}
+            style={{height: "600px", width: "100%", position: 'relative'}}
             ref={(mount) => {
                this.mount = mount;
             }}

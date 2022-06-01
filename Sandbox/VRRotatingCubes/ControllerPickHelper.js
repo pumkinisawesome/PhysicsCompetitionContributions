@@ -5,7 +5,7 @@ class ControllerPickHelper extends THREE.EventDispatcher {
    constructor(scene, renderer) {
       super();
       this.raycaster = new THREE.Raycaster();
-      this.objectToColorMap = new Map();
+      // this.objectToColorMap = new Map();
       this.controllerToObjectMap = new Map();
       this.tempMatrix = new THREE.Matrix4();
 
@@ -51,12 +51,9 @@ class ControllerPickHelper extends THREE.EventDispatcher {
    }
 
    _reset() {
-      // restore the colors
-      this.objectToColorMap.forEach((color, object) => {
-         object.material.emissive.setHex(color);
-      });
-      this.objectToColorMap.clear();
-      this.controllerToObjectMap.clear();
+      for (const {line} of this.controllers) {
+         line.material.color.setHex(0xFFFFFF);
+      }
    }
 
    update(pickablesParent, time) {
@@ -76,15 +73,8 @@ class ControllerPickHelper extends THREE.EventDispatcher {
             const pickedObject = intersection.object;
             // save which object this controller picked
             this.controllerToObjectMap.set(controller, pickedObject);
-            // highlight the object if we haven't already
-            if (this.objectToColorMap.get(pickedObject) === undefined) {
-               // save its color
-               this.objectToColorMap.set(pickedObject,
-                pickedObject.material.emissive.getHex());
-               // set its emissive color to flashing red/yellow
-               pickedObject.material.emissive.setHex((time * 8)
-                % 2 > 1 ? 0xFF2000 : 0xFF0000);
-            }
+            // Set line to flashing red/yellow
+            line.material.color.setHex((time * 8) % 2 > 1 ? 0xFFAA00 : 0xFF0000);
          } else {
             line.scale.z = 5;
          }

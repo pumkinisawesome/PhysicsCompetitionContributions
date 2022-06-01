@@ -20,7 +20,7 @@ function main() {
    const scene = new THREE.Scene();
    // object to put pickable objects on so we can easily
    // separate them from non-pickable objects
-   const pickRoot = new THREE.Object3D();
+   const pickRoot = new THREE.Group();
    scene.add(pickRoot);
 
    const controllerHelper = new ControllerPickHelper(scene, renderer);
@@ -77,7 +77,7 @@ function main() {
    const cubes = [
       makeInstance(geometry, 0x44aa88,  0),
       makeInstance(geometry, 0x8844aa, -2),
-      makeInstance(geometry, 0xaa8844,  2),
+      makeInstance(geometry, 0xaa8844,  2)
    ];
 
    function resizeRendererToDisplaySize(renderer) {
