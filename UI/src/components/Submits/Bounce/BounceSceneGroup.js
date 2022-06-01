@@ -53,14 +53,18 @@ export class BounceSceneGroup {
 
       // Make rig a group so we can put origin at lower left front of base
       this.rig = new THREE.Group();
+      this.rig.name = 'rig';
       let base = new THREE.Mesh(new THREE.BoxGeometry(rigSize, rigSize,
          2 * ballRadius), steelMat)
+      base.name = 'base';
       base.position.set(rigSize / 2, rigSize / 2, -ballRadius);
       this.rig.add(base);
       let platform = new THREE.Mesh(new THREE.BoxGeometry(1, .25, 1),
          flatSteelMat);
+      platform.name = 'platform';
       this.ball = new THREE.Mesh(new THREE.SphereGeometry
          (ballRadius, ballSteps, ballSteps), flatSteelMat);
+      this.ball.name = 'ball';
    
       // Put ball at upper left corner of rig, just touching the base.
       this.ball.position.set(0, rigSize, 2 * ballRadius);
@@ -75,12 +79,14 @@ export class BounceSceneGroup {
       // Put Piston base on the far left of platform
       let pBase = new THREE.Mesh(new THREE.BoxGeometry(pistonHeight,
           pistonWidth, pistonDepth),flatSteelMat);
+      pBase.name = 'pBase';
       pBase.position.set(pistonX,pistonY,0);
       platform.add(pBase);
 
       // Put Cylinder between piston base and piston face
       let pCyl = new THREE.Mesh(new THREE.CylinderGeometry(cylinderWidth,
           cylinderHeight, cylinderLength),flatSteelMat);
+      pCyl.name = 'pCyl';
       pCyl.position.set(0, 0, 0);
       pCyl.rotateZ(cylinderRotate);
       pCyl.name = 'pCyl';
@@ -89,7 +95,7 @@ export class BounceSceneGroup {
       // Place piston face on the far right side of the cylinder
       let pFace = new THREE.Mesh(new THREE.BoxGeometry(pistonHeight,
           faceWidth, pistonDepth),flatSteelMat);
-
+      pFace.name = 'pFace';
       pFace.position.set(0, -.25, 0);
       pCyl.add(pFace);
 
