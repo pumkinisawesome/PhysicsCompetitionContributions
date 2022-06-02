@@ -13,48 +13,43 @@ export class VRMovieController {
 
 
    play(rate) {
-      console.log('play');
       this.playing = true;
-      console.log('rate: ', rate);
 
+      // If rate changed, reset startTime
       if (this.rate !== rate) {
          this.rate = rate;
          this.startTime = null;
       }
 
+      // If offset is past end of movie, reset
       if (this.currentOffset >= this.duration) {
          this.currentOffset = 0;
       }
    }
 
    pause() {
-      console.log('pause');
       this.playing = false;
       this.startTime = null;
    }
 
    animate(time) {
       if (this.playing) {
-         console.log('playing');
-         console.log('currentOffset: ', this.currentOffset);
          time /= 1000;
-         console.log('time: ', time);
 
          // If we are starting animation, set startTime
          if (this.startTime === null) {
             this.startTime = time - this.currentOffset / this.rate;
-            console.log('starting! startTime: ', this.startTime);
          }
 
          // Stop animation at end of movie
          if (this.currentOffset > this.duration) {
-            console.log('end of movie');
             this.pause();
          }
 
          // Set currentOffset to reflect time into movie
          let newOffset = (time - this.startTime) * this.rate;
 
+         // If offset changed, update scene graph
          if (newOffset !== this.currentOffset) {
             this.currentOffset = newOffset;
             this.setOffset(this.currentOffset);
