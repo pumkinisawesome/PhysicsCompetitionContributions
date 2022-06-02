@@ -15,13 +15,16 @@ class ControllerPickHelper extends THREE.EventDispatcher {
       this.controllerToObjectMap = new Map();
       this.tempMatrix = new THREE.Matrix4();
 
+      // Create line geometry
       const pointerGeometry = new THREE.BufferGeometry().setFromPoints([
          new THREE.Vector3(0, 0, 0),
          new THREE.Vector3(0, 0, -1),
       ]);
  
+      // Array to store controllers
       this.controllers = [];
 
+      // Dispatch controller select event, with controller and object
       const selectListener = (event) => {
          const controller = event.target;
          const selectedObject = this.controllerToObjectMap.get(controller);
@@ -30,11 +33,13 @@ class ControllerPickHelper extends THREE.EventDispatcher {
          }
       };
 
+      // Dispatch controller select end event, with controller
       const endListener = (event) => {
          const controller = event.target;
          this.dispatchEvent({type: event.type, controller});
       };
 
+      // Get controllers, and add models and a selection line
       for (let i = 0; i < 2; ++i) {
          const controller = renderer.xr.getController(i);
          if (i) {
@@ -47,6 +52,7 @@ class ControllerPickHelper extends THREE.EventDispatcher {
          controller.addEventListener('selectend', endListener);
          scene.add(controller);
 
+         // Get and add models to controllers
          const controllerModelFactory = new XRControllerModelFactory();
          const controllerGrip = renderer.xr.getControllerGrip(i);
          const model = controllerModelFactory.
@@ -54,6 +60,7 @@ class ControllerPickHelper extends THREE.EventDispatcher {
          controllerGrip.add(model);
          scene.add(controllerGrip);
  
+         // Create a line for each controller
          const line = new THREE.Line(pointerGeometry);
          line.scale.z = 5;
          controller.add(line);
@@ -68,7 +75,7 @@ class ControllerPickHelper extends THREE.EventDispatcher {
       this.controllerToObjectMap.clear();
    }
 
-   update(pickablesParent, time) {
+   update(pickablesParent) {
       this._reset();
       for (const {controller, line} of this.controllers) {
          // cast a ray through the from the controller
@@ -107,10 +114,36 @@ export class BounceVRView extends React.Component {
       this.state = BounceVRView.getInitState(props.movie);
    }
 
-   // Return state displaying things
+   static makeButton(name, color, x) {
+      const button = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5));
+      button.name = name;
+      button.material.color.setHex(color);
+
+      button.position.x = x;
+      button.position.y = 0;
+      button.position.z = -3;
+
+      return button;
+   }
+
+   static makeControlsGroup() {
+      const controlsGroup = new THREE.Group();
+      controlsGroup.name = 'controlsGroup';
+
+      // Create buttons
+      controlsGroup.add(BounceVRView.makeButton('pauseButton', 0xff0000, -1));
+      controlsGroup.add(BounceVRView.makeButton('slowButton', 0xffff00, 0));
+      controlsGroup.add(BounceVRView.makeButton('playButton', 0x00ff00, 1));
+
+      return controlsGroup;
+   }
+
+   // Return state displaying background grid and other fixtures
+   // appropriate for |movie|.
    static getInitState(movie) {
       const rigSize = BounceSceneGroup.rigSize;
       const ballRadius = BounceSceneGroup.ballRadius;
+
       let scene = new THREE.Scene();
       let sceneGroup = new BounceSceneGroup(movie);
       sceneGroup.getSceneGroup().position.set(0, 16, -5);
@@ -125,6 +158,8 @@ export class BounceVRView extends React.Component {
 
       const renderer = new THREE.WebGLRenderer({antialias: true});
       renderer.xr.enabled = true;
+
+      // Create button to initiate a VR session
       const button = VRButton.createButton(renderer);
 
 
@@ -135,42 +170,33 @@ export class BounceVRView extends React.Component {
       const camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
       camera.position.set(0, 1.6, 0);
 
-      // Group to contain control objects
-      const controlsGroup = new THREE.Group();
-      controlsGroup.name = 'controlsGroup';
-      scene.add(controlsGroup);
-
       // Create VR movie controller
       const movieController = new VRMovieController(movie, (offset) => {
          sceneGroup.setOffset(offset);
       });
 
-      // Create buttons
-      let buttonLeft = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5));
-      buttonLeft.name = 'buttonLeft';
-      buttonLeft.material.color.setHex(0xff0000);
-      buttonLeft.position.set(-1, 0, -3);
-      controlsGroup.add(buttonLeft);
-
-      let buttonRight = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.5, 0.5));
-      buttonRight.name = 'buttonRight';
-      buttonRight.material.color.setHex(0x00ff00);
-      buttonRight.position.set(1, 0, -3);
-      controlsGroup.add(buttonRight);
+      // Group to contain control objects
+      const controlsGroup = BounceVRView.makeControlsGroup();
+      scene.add(controlsGroup);
 
       // Map of buttons to VRMovieController methods
       const functionMap = {
-         'buttonLeft': () => {
+         'pauseButton': () => {
             movieController.pause();
          },
-         'buttonRight': () => {
+         'slowButton': () => {
+            movieController.play(0.5);
+         },
+         'playButton': () => {
             movieController.play(1);
          }
-      }
+      };
 
+      // Create controller helper
       const controllerHelper = new ControllerPickHelper(scene, renderer);
       const controllerToSelection = new Map();
 
+      // Event listener to trigger function based on object selected
       controllerHelper.addEventListener('selectstart', (event) => {
          const {controller, selectedObject} = event;
          const existingSelection = controllerToSelection.get(controller);
@@ -204,7 +230,6 @@ export class BounceVRView extends React.Component {
    componentDidMount() {
       const width = this.mount.clientWidth;
       const height = this.mount.clientHeight;
-      let rigSize = BounceSceneGroup.rigSize;
 
       this.state.renderer.setSize(width, height);
 
@@ -236,7 +261,7 @@ export class BounceVRView extends React.Component {
 
    static renderFrame(time, state) {
       state.movieController.animate(time);
-      state.controllerHelper.update(state.controlsGroup, time);
+      state.controllerHelper.update(state.controlsGroup);
 
       state.renderer.render(state.scene, state.camera);
    }
