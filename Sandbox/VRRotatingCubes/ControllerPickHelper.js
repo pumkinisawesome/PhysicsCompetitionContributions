@@ -38,8 +38,8 @@ class ControllerPickHelper extends THREE.EventDispatcher {
 
          const controllerModelFactory = new XRControllerModelFactory();
          const controllerGrip = renderer.xr.getControllerGrip(i);
-         const model = controllerModelFactory.
-          createControllerModel( controllerGrip );
+         const model = controllerModelFactory
+          .createControllerModel( controllerGrip );
          controllerGrip.add( model );
          scene.add( controllerGrip );
  
@@ -61,10 +61,13 @@ class ControllerPickHelper extends THREE.EventDispatcher {
       for (const {controller, line} of this.controllers) {
          // cast a ray through the from the controller
          this.tempMatrix.identity().extractRotation(controller.matrixWorld);
-         this.raycaster.ray.origin.setFromMatrixPosition(controller.matrixWorld);
-         this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(this.tempMatrix);
+         this.raycaster.ray.origin.setFromMatrixPosition(
+          controller.matrixWorld);
+         this.raycaster.ray.direction.set(0, 0, -1).applyMatrix4(
+          this.tempMatrix);
          // get the list of objects the ray intersected
-         const intersections = this.raycaster.intersectObjects(pickablesParent.children);
+         const intersections = this.raycaster.intersectObjects(
+          pickablesParent.children);
          if (intersections.length) {
             const intersection = intersections[0];
             // make the line touch the object
@@ -74,7 +77,8 @@ class ControllerPickHelper extends THREE.EventDispatcher {
             // save which object this controller picked
             this.controllerToObjectMap.set(controller, pickedObject);
             // Set line to flashing red/yellow
-            line.material.color.setHex((time * 8) % 2 > 1 ? 0xFFAA00 : 0xFF0000);
+            line.material.color.setHex(
+             (time * 8) % 2 > 1 ? 0xFFAA00 : 0xFF0000);
          } else {
             line.scale.z = 5;
          }
