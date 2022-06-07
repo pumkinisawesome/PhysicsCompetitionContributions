@@ -1,6 +1,9 @@
 import {BounceMovie} from './BounceMovie';
 import * as THREE from 'three';
-import {concreteMat, flatSteelMat, steelMat} from '../../Util/Materials.js';
+import {concreteMat, flatSteelMat, steelMat, brickMat} from '../../Util/Materials.js';
+import UIfx from 'uifx';
+import pingAudio from '../../../assets/sound/lowPing.mp3';
+import * as ImageUtil from '../../Util/ImageUtil';
 
 export class BounceSceneGroup {
    // Suggested members
@@ -19,6 +22,8 @@ export class BounceSceneGroup {
       // Add movie as member
       this.movie = movie;
 
+      this.ping = new UIfx(pingAudio, {volume: 0.5, throttleMs: 100});
+
       // Create the scenegraph for the movie, at time offset 0s
       const rigSize = BounceSceneGroup.rigSize;
       const ballRadius = BounceSceneGroup.ballRadius;
@@ -36,11 +41,27 @@ export class BounceSceneGroup {
 
       this.topGroup = new THREE.Group();
 
+      // let brickMatSmall = brickMat.clone();
+      // brickMatSmall.needsUpdate = true;
+      // brickMatSmall.wrapS = THREE.RepeatWrapping;
+      // brickMatSmall.wrapT = THREE.RepeatWrapping;
+      // brickMatSmall.map.repeat.set(3, 3);
+      // brickMatSmall.needsUpdate = true;
+
+      let brickMatLarge = ImageUtil.createMaterial(brickMat);
+      let brickMatSmall = ImageUtil.createMatFromParams(brickMat, 5);
+
+      // console.log(brickMat);
+      // console.log(brickMatSmall);
+      // console.log(concreteMat)
+
+      console.log(concreteMat.map.repeat);
+
       // Create standard room with center of far wall at origin
       let roomDim = 3 * rigSize + 2;  // big boundaries around rig
       this.room = new THREE.Mesh(
-       new THREE.BoxGeometry(roomDim, roomDim, roomDim), [concreteMat,
-       concreteMat, concreteMat, flatSteelMat, concreteMat, concreteMat]);
+       new THREE.BoxGeometry(roomDim, roomDim, roomDim), [brickMatLarge,
+         brickMatLarge, concreteMat, flatSteelMat, brickMatSmall, brickMatSmall]);
       this.room.position.set(0, 0, 9);
       this.room.name = 'room';
       this.topGroup.add(this.room);
@@ -141,6 +162,10 @@ export class BounceSceneGroup {
           || evt.type === BounceMovie.cHitBarrier
           || evt.type === BounceMovie.cHitTarget) {
             this.ball.position.set(evt.x, evt.y, ballRadius);
+         }
+         if (evt.type === BounceMovie.cHitBarrier
+          || evt.type === BounceMovie.cHitTarget) {
+             this.ping.play();
          }
          if (evt.type === BounceMovie.cTargetFade) {
             this.targets[evt.targetId].position.z

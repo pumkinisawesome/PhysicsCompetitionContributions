@@ -4,7 +4,6 @@ import * as THREE from "three";
 import CameraControls from "camera-controls";
 import pingAudio from '../../../assets/sound/ping.mp3';
 import UIfx from 'uifx';
-import {concreteMat, flatSteelMat, steelMat} from '../../Util/Materials.js';
 import {BounceSceneGroup} from './BounceSceneGroup';
 
 CameraControls.install({THREE});
