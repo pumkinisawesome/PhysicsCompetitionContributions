@@ -31,7 +31,7 @@ let steelPrm = {
    roughness: steelPlateRoughness,
    ao: steelPlateAo,
    metal: {metalness: 0.5},
-   reps: {x: 5, y: 5}
+   reps: {x: 0.5, y: 0.5}
 };
 
 let concretePrm = {
@@ -40,7 +40,8 @@ let concretePrm = {
    displacement: {file: concreteHeight, scale: 0.1},
    roughness: concreteRoughness,
    ao: concreteAo,
-   metal: {file: concreteMetalness, metalness: 0.5}
+   metal: {file: concreteMetalness, metalness: 0.5},
+   reps: {x: 0.5, y: 0.5}
 };
 
 let brickPrm = {
@@ -48,12 +49,14 @@ let brickPrm = {
    normal: brickNormal,
    displacement: {file: brickHeight, scale: 0.1},
    roughness: brickRoughness,
-   ao: brickAo
+   ao: brickAo,
+   reps: {x: 0.5, y: 0.5},
 };
 
 let flatSteelPrm = {
    roughness: flatSteelRoughness,
-   metal: {metalness: 0.5}
+   metal: {metalness: 0.5},
+   reps: {x: 0.5, y: 0.5}
 };
 
 let goldPrm = {
@@ -67,11 +70,11 @@ let goldPrm = {
 // "Then" on this promise yields an object of loaded param objects, labelled
 // by the param names, e.g. steelPrm, concretePrm, etc.  Use these to make
 // StandardMaterials or other materials.
-function loadMatParams(prmSpecs) {
+function loadMatPrms(prmSpecs) {
    let loads = {};  // Object of labeled Promises returned from loadModelParams
 
    Object.entries(prmSpecs).forEach(([key, value]) => {
-      loads[key] = loadModelParams(value);
+      loads[key] = loadModelPrms(value);
    });
 
    return Promise.all(Object.values(loads))
@@ -84,7 +87,7 @@ function loadMatParams(prmSpecs) {
    })
 }
 
-function loadModelParams(prmSpec) {
+function loadModelPrms(prmSpec) {
    let reps = prmSpec.reps;
    let params = {color: 0xFFFFFF, side: prmSpec.side || THREE.DoubleSide};
    let loads = {};
@@ -104,7 +107,7 @@ function loadModelParams(prmSpec) {
       loads.aoMap = loadTextureAsync(prmSpec.ao, reps);
 
    if (prmSpec.roughness)
-      loads.roughness = loadTextureAsync(prmSpec.roughness, reps);
+      loads.roughnessMap = loadTextureAsync(prmSpec.roughness, reps);
 
    if (prmSpec.metal) {
       if (prmSpec.metal.file)
@@ -117,7 +120,6 @@ function loadModelParams(prmSpec) {
       Object.keys(loads).forEach((key, idx) => {
          params[key] = res[idx];
       });
-      params.needsUpdate = true;
 
       return params; 
    });
@@ -127,7 +129,7 @@ function loadTextureAsync(path, reps) {
    return new THREE.TextureLoader().loadAsync(path)
    .then(tex => {
       if (reps) {
-         tex.wrapS = tex.wrapT = THREE.MirroredRepeatWrapping;
+         tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
          tex.repeat.set(reps.x, reps.y);
       }
       return tex;
@@ -146,11 +148,43 @@ loadMatPrms({steelPrm, concretePrm, brickPrm}).then(prms => {
 */
 
 let brickMat = {
-   slow: loadMatParams(brickPrm),
+   slow: loadModelPrms(brickPrm),
    fast: {
       color: 0x6D3B2B,
       side: THREE.DoubleSide
    }
 };
 
-export {brickMat};
+let steelMat = {
+   slow: loadModelPrms(steelPrm),
+   fast: {
+      color: 0x838381,
+      side: THREE.DoubleSide
+   }
+};
+
+let concreteMat = {
+   slow: loadModelPrms(concretePrm),
+   fast: {
+      color: 0x5F5F5F,
+      side: THREE.DoubleSide
+   }
+};
+
+let flatSteelMat = {
+   slow: loadModelPrms(flatSteelPrm),
+   fast: {
+      color: 0x5F5F5F,
+      side: THREE.DoubleSide
+   }
+};
+
+let goldMat = {
+   slow: loadModelPrms(goldPrm),
+   fast: {
+      color: 0xC6994B,
+      side: THREE.DoubleSide
+   }
+};
+
+export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat};
