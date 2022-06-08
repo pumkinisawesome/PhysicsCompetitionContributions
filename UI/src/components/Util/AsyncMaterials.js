@@ -71,7 +71,7 @@ let goldPrm = {
 // by the param names, e.g. steelPrm, concretePrm, etc.  Use these to make
 // StandardMaterials or other materials.
 function loadMatPrms(prmSpecs) {
-   let loads = {};  // Object of labeled Promises returned from loadModelParams
+   let loads = {};  // Labeled Promises returned from loadModelParams
 
    Object.entries(prmSpecs).forEach(([key, value]) => {
       loads[key] = loadModelPrms(value);
