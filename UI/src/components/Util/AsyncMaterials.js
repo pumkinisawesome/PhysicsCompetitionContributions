@@ -13,11 +13,11 @@ import concreteMetalness from '../../assets/textures/concrete/metalness.jpg';
 import concreteRoughness from '../../assets/textures/concrete/roughness.jpg';
 import concreteAo from '../../assets/textures/concrete/ao.jpg';
 
-import brickAlbedo from '../../assets/textures/Brick/albedo.png';
-import brickNormal from '../../assets/textures/Brick/normal.png';
-import brickHeight from '../../assets/textures/Brick/height.png';
-import brickRoughness from '../../assets/textures/Brick/roughness.png';
-import brickAo from '../../assets/textures/Brick/ao.png';
+import brickAlbedo from '../../assets/textures/brick/albedo.png';
+import brickNormal from '../../assets/textures/brick/normal.png';
+import brickHeight from '../../assets/textures/brick/height.png';
+import brickRoughness from '../../assets/textures/brick/roughness.png';
+import brickAo from '../../assets/textures/brick/ao.png';
 
 import flatSteelRoughness from "../../assets/textures/flatSteel/roughness.png";
 
