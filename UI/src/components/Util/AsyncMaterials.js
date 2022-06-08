@@ -24,6 +24,26 @@ import flatSteelRoughness from "../../assets/textures/flatSteel/roughness.png";
 import goldAlbedo from '../../assets/textures/gold/albedo.png';
 import goldRoughness from '../../assets/textures/gold/roughness.png';
 
+import verticalLinedMetalAlbedo from '../../assets/textures/verticalLinedMetal/albedo.png';
+import verticalLinedMetalNormal from '../../assets/textures/verticalLinedMetal/normal.png';
+import verticalLinedMetalHeight from '../../assets/textures/verticalLinedMetal/height.png';
+import verticalLinedMetalRoughness from '../../assets/textures/verticalLinedMetal/roughness.png';
+import verticalLinedMetalMetalness from '../../assets/textures/verticalLinedMetal/metalness.png';
+import verticalLinedMetalAo from '../../assets/textures/verticalLinedMetal/ao.png';
+
+import brassAlbedo from '../../assets/textures/brass/albedo.png';
+import brassNormal from '../../assets/textures/brass/normal.png';
+import brassRoughness from '../../assets/textures/brass/roughness.png';
+import brassMetalness from '../../assets/textures/brass/metalness.png';
+import brassAo from '../../assets/textures/brass/ao.png';
+
+import scuffedMetalAlbedo from '../../assets/textures/scuffedMetal/albedo.png';
+import scuffedMetalNormal from '../../assets/textures/scuffedMetal/normal.png';
+import scuffedMetalHeight from '../../assets/textures/scuffedMetal/height.png';
+import scuffedMetalRoughness from '../../assets/textures/scuffedMetal/roughness.png';
+import scuffedMetalMetalness from '../../assets/textures/scuffedMetal/metalness.png';
+import scuffedMetalAo from '../../assets/textures/scuffedMetal/ao.png';
+
 let steelPrm = {
    map: steelPlateAlbedo,
    normal: steelPlateNormal,
@@ -47,10 +67,10 @@ let concretePrm = {
 let brickPrm = {
    map: brickAlbedo,
    normal: brickNormal,
-   displacement: {file: brickHeight, scale: 0.1},
+   displacement: {file: brickHeight, scale: 0.05},
    roughness: brickRoughness,
    ao: brickAo,
-   reps: {x: 0.5, y: 0.5},
+   reps: {x: 0.25, y: 0.25},
 };
 
 let flatSteelPrm = {
@@ -64,7 +84,36 @@ let goldPrm = {
    roughness: goldRoughness,
    metal: {metalness: 0.5},
    reps: {x: 0.5, y: 0.5}
-}
+};
+
+let verticalLinedMetalPrm = {
+   map: verticalLinedMetalAlbedo,
+   normal: verticalLinedMetalNormal,
+   displacement: {file: verticalLinedMetalHeight, scale: 0.1},
+   roughness: verticalLinedMetalRoughness,
+   metal: {file: verticalLinedMetalMetalness, metalness: 0.5},
+   ao: verticalLinedMetalAo,
+   reps: {x: 0.5, y: 0.5}
+};
+
+let brassPrm = {
+   map: brassAlbedo,
+   normal: brassNormal,
+   roughness: brassRoughness,
+   metal: {file: brassMetalness, metalness: 0.5},
+   ao: brassAo,
+   reps: {x: 1, y: 1}
+};
+
+let scuffedMetalPrm = {
+   map: scuffedMetalAlbedo,
+   normal: scuffedMetalNormal,
+   displacement: {file: scuffedMetalHeight, scale: 0.1},
+   roughness: scuffedMetalRoughness,
+   metal: {file: scuffedMetalMetalness, metalness: .8},
+   ao: scuffedMetalAo,
+   reps: {x: 1, y: 1}
+};
 
 // Return promise that awaits load of all parameters in the object passed.
 // "Then" on this promise yields an object of loaded param objects, labelled
@@ -98,10 +147,10 @@ function loadModelPrms(prmSpec) {
    if (prmSpec.normal)
       loads.normalMap = loadTextureAsync(prmSpec.normal, reps);
 
-   if (prmSpec.displacement) {
-      loads.displacementMap = loadTextureAsync(prmSpec.displacement.file, reps);
-      params.displacementScale = prmSpec.displacement.scale
-   }
+   // if (prmSpec.displacement) {
+   //    loads.displacementMap = loadTextureAsync(prmSpec.displacement.file, reps);
+   //    params.displacementScale = prmSpec.displacement.scale
+   // }
    
    if (prmSpec.aoMap)
       loads.aoMap = loadTextureAsync(prmSpec.ao, reps);
@@ -187,4 +236,28 @@ let goldMat = {
    }
 };
 
-export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat};
+let verticalLinedMetalMat = {
+   slow: loadModelPrms(verticalLinedMetalPrm),
+   fast: {
+      color: 0x1C1C1F,
+      side: THREE.DoubleSide
+   }
+};
+
+let brassMat = {
+   slow: loadModelPrms(brassPrm),
+   fast: {
+      color: 0x5A482D,
+      side: THREE.DoubleSide
+   }
+};
+
+let scuffedMetalMat = {
+   slow: loadModelPrms(scuffedMetalPrm),
+   fast: {
+      color: 0x413F36,
+      side: THREE.DoubleSide
+   }
+};
+
+export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat, verticalLinedMetalMat, brassMat, scuffedMetalMat};
