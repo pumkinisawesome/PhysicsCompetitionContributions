@@ -21,6 +21,9 @@ import brickAo from '../../assets/textures/brick/ao.png';
 
 import flatSteelRoughness from "../../assets/textures/flatSteel/roughness.png";
 
+import goldAlbedo from '../../assets/textures/gold/albedo.png';
+import goldRoughness from '../../assets/textures/gold/roughness.png';
+
 let steelPrm = {
    map: steelPlateAlbedo,
    normal: steelPlateNormal,
@@ -52,6 +55,13 @@ let flatSteelPrm = {
    roughness: flatSteelRoughness,
    metal: {metalness: 0.5}
 };
+
+let goldPrm = {
+   map: goldAlbedo,
+   roughness: goldRoughness,
+   metal: {metalness: 0.5},
+   reps: {x: 0.5, y: 0.5}
+}
 
 // Return promise that awaits load of all parameters in the object passed.
 // "Then" on this promise yields an object of loaded param objects, labelled
