@@ -51,6 +51,40 @@ import checkerboardRoughness from '../../assets/textures/checkerboard/roughness.
 import checkerboardMetalness from '../../assets/textures/checkerboard/metalness.png';
 import checkerboardAo from '../../assets/textures/checkerboard/ao.png';
 
+/* Rough draft for oak and woodFloor textures
+   woodFloor: {
+      other: {
+         displacementScale: 0.05,
+         metalness: 0.3,
+         roughness: 0.7
+      },
+      txts: {
+         baseName: "../textures/WoodFloor/",
+         size: 1,
+         files: {
+            map: "albedo.png",
+            normalMap: "normal.png",
+            roughnessMap: "roughness.png"
+         }
+      }
+   },
+
+   oak: {
+      other: {
+         metalness: 0.2,
+         roughness: 0.8
+      },
+      txts: {
+         baseName: "../textures/Oak/",
+         size: 1,
+         files: {
+            map: "albedo.png",
+            roughnessMap: "roughness.png"
+         }
+      }
+   },
+*/
+
 let steelPrm = {
    map: steelPlateAlbedo,
    normal: steelPlateNormal,
