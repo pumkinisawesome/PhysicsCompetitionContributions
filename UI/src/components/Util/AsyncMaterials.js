@@ -44,6 +44,13 @@ import scuffedMetalRoughness from '../../assets/textures/scuffedMetal/roughness.
 import scuffedMetalMetalness from '../../assets/textures/scuffedMetal/metalness.png';
 import scuffedMetalAo from '../../assets/textures/scuffedMetal/ao.png';
 
+import checkerboardAlbedo from '../../assets/textures/checkerboard/albedo.png';
+import checkerboardNormal from '../../assets/textures/checkerboard/normal.png';
+import checkerboardHeight from '../../assets/textures/checkerboard/height.png';
+import checkerboardRoughness from '../../assets/textures/checkerboard/roughness.png';
+import checkerboardMetalness from '../../assets/textures/checkerboard/metalness.png';
+import checkerboardAo from '../../assets/textures/checkerboard/ao.png';
+
 let steelPrm = {
    map: steelPlateAlbedo,
    normal: steelPlateNormal,
@@ -97,6 +104,7 @@ let verticalLinedMetalPrm = {
 };
 
 let brassPrm = {
+   color: 0xAAAAAA,
    map: brassAlbedo,
    normal: brassNormal,
    roughness: brassRoughness,
@@ -114,6 +122,16 @@ let scuffedMetalPrm = {
    ao: scuffedMetalAo,
    reps: {x: 1, y: 1}
 };
+
+let checkerboardPrm = {
+   map: checkerboardAlbedo,
+   normal: checkerboardNormal,
+   displacement: {file: checkerboardHeight, scale: 0.1},
+   roughness: checkerboardRoughness,
+   metal: {file: checkerboardMetalness, metalness: 0.5},
+   ao: checkerboardAo,
+   reps: {x: 1, y: 1}
+}
 
 // Return promise that awaits load of all parameters in the object passed.
 // "Then" on this promise yields an object of loaded param objects, labelled
@@ -140,6 +158,9 @@ function loadModelPrms(prmSpec) {
    let reps = prmSpec.reps;
    let params = {color: 0xFFFFFF, side: prmSpec.side || THREE.DoubleSide};
    let loads = {};
+
+   if (prmSpec.color)
+      params.color = prmSpec.color;
 
    if (prmSpec.map)
       loads.map = loadTextureAsync(prmSpec.map, reps);
@@ -199,7 +220,7 @@ loadMatPrms({steelPrm, concretePrm, brickPrm}).then(prms => {
 let brickMat = {
    slow: loadModelPrms(brickPrm),
    fast: {
-      color: 0x6D3B2B,
+      color: 0x9F8779,
       side: THREE.DoubleSide
    }
 };
@@ -260,4 +281,12 @@ let scuffedMetalMat = {
    }
 };
 
-export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat, verticalLinedMetalMat, brassMat, scuffedMetalMat};
+let checkerboardMat = {
+   slow: loadModelPrms(checkerboardPrm),
+   fast: {
+      color: 0x777777,
+      side: THREE.DoubleSide
+   }
+};
+
+export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat, verticalLinedMetalMat, brassMat, scuffedMetalMat, checkerboardMat};
