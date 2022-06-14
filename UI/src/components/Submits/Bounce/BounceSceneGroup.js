@@ -51,12 +51,6 @@ export class BounceSceneGroup {
       let brickMatLarge = ImageUtil.createMaterial(brickMat);
       let brickMatSmall = ImageUtil.createMatFromParams(brickMat, 5);
 
-      // console.log(brickMat);
-      // console.log(brickMatSmall);
-      // console.log(concreteMat)
-
-      console.log(concreteMat.map.repeat);
-
       // Create standard room with center of far wall at origin
       let roomDim = 3 * rigSize + 2;  // big boundaries around rig
       this.room = new THREE.Mesh(
