@@ -2,20 +2,17 @@ import * as THREE from "three";
 
 import steelPlateAlbedo from '../../assets/textures/steelPlate/albedo.png';
 import steelPlateNormal from '../../assets/textures/steelPlate/normal.png';
-import steelPlateHeight from '../../assets/textures/steelPlate/height.png';
 import steelPlateRoughness from '../../assets/textures/steelPlate/roughness.png';
 import steelPlateAo from '../../assets/textures/steelPlate/ao.png';
 
 import concreteAlbedo from '../../assets/textures/concrete/albedo.jpg';
 import concreteNormal from '../../assets/textures/concrete/normal.jpg';
-import concreteHeight from '../../assets/textures/concrete/height.png';
-import concreteMetalness from '../../assets/textures/concrete/metalness.jpg';
 import concreteRoughness from '../../assets/textures/concrete/roughness.jpg';
 import concreteAo from '../../assets/textures/concrete/ao.jpg';
+import concreteMetalness from '../../assets/textures/concrete/metalness.jpg';
 
 import brickAlbedo from '../../assets/textures/brick/albedo.png';
 import brickNormal from '../../assets/textures/brick/normal.png';
-import brickHeight from '../../assets/textures/brick/height.png';
 import brickRoughness from '../../assets/textures/brick/roughness.png';
 import brickAo from '../../assets/textures/brick/ao.png';
 
@@ -24,71 +21,41 @@ import flatSteelRoughness from "../../assets/textures/flatSteel/roughness.png";
 import goldAlbedo from '../../assets/textures/gold/albedo.png';
 import goldRoughness from '../../assets/textures/gold/roughness.png';
 
-import verticalLinedMetalAlbedo from '../../assets/textures/verticalLinedMetal/albedo.png';
-import verticalLinedMetalNormal from '../../assets/textures/verticalLinedMetal/normal.png';
-import verticalLinedMetalHeight from '../../assets/textures/verticalLinedMetal/height.png';
-import verticalLinedMetalRoughness from '../../assets/textures/verticalLinedMetal/roughness.png';
-import verticalLinedMetalMetalness from '../../assets/textures/verticalLinedMetal/metalness.png';
-import verticalLinedMetalAo from '../../assets/textures/verticalLinedMetal/ao.png';
+import plasterAlbedo from '../../assets/textures/plaster/albedo.png';
+import plasterNormal from '../../assets/textures/plaster/normal.png';
+import plasterRoughness from '../../assets/textures/plaster/roughness.png';
+
+import scratchedPlasticAlbedo from '../../assets/textures/scratchedPlastic/albedo.jpg';
+import scratchedPlasticNormal from '../../assets/textures/scratchedPlastic/normal.png';
+import scratchedPlasticRoughness from '../../assets/textures/scratchedPlastic/roughness.jpg';
+import scratchedPlasticAo from '../../assets/textures/scratchedPlastic/ao.jpg';
+
+// The materials below are from https://freepbr.com/, and if they are to be used
+// comercially, they must be bought. The entire library can be bought for $9.
 
 import brassAlbedo from '../../assets/textures/brass/albedo.png';
 import brassNormal from '../../assets/textures/brass/normal.png';
 import brassRoughness from '../../assets/textures/brass/roughness.png';
-import brassMetalness from '../../assets/textures/brass/metalness.png';
 import brassAo from '../../assets/textures/brass/ao.png';
 
 import scuffedMetalAlbedo from '../../assets/textures/scuffedMetal/albedo.png';
 import scuffedMetalNormal from '../../assets/textures/scuffedMetal/normal.png';
-import scuffedMetalHeight from '../../assets/textures/scuffedMetal/height.png';
 import scuffedMetalRoughness from '../../assets/textures/scuffedMetal/roughness.png';
-import scuffedMetalMetalness from '../../assets/textures/scuffedMetal/metalness.png';
 import scuffedMetalAo from '../../assets/textures/scuffedMetal/ao.png';
 
 import checkerboardAlbedo from '../../assets/textures/checkerboard/albedo.png';
 import checkerboardNormal from '../../assets/textures/checkerboard/normal.png';
-import checkerboardHeight from '../../assets/textures/checkerboard/height.png';
 import checkerboardRoughness from '../../assets/textures/checkerboard/roughness.png';
-import checkerboardMetalness from '../../assets/textures/checkerboard/metalness.png';
 import checkerboardAo from '../../assets/textures/checkerboard/ao.png';
 
-/* Rough draft for oak and woodFloor textures
-   woodFloor: {
-      other: {
-         displacementScale: 0.05,
-         metalness: 0.3,
-         roughness: 0.7
-      },
-      txts: {
-         baseName: "../textures/WoodFloor/",
-         size: 1,
-         files: {
-            map: "albedo.png",
-            normalMap: "normal.png",
-            roughnessMap: "roughness.png"
-         }
-      }
-   },
-
-   oak: {
-      other: {
-         metalness: 0.2,
-         roughness: 0.8
-      },
-      txts: {
-         baseName: "../textures/Oak/",
-         size: 1,
-         files: {
-            map: "albedo.png",
-            roughnessMap: "roughness.png"
-         }
-      }
-   },
-*/
+import olderWoodFloorAlbedo from '../../assets/textures/olderWoodFloor/albedo.png';
+import olderWoodFloorNormal from '../../assets/textures/olderWoodFloor/normal.png';
+import olderWoodFloorAo from '../../assets/textures/olderWoodFloor/ao.png';
+import olderWoodFloorRoughness from '../../assets/textures/olderWoodFloor/roughness.png';
 
 let steelPrm = {
    map: steelPlateAlbedo,
    normal: steelPlateNormal,
-   displacement: {file: steelPlateHeight, scale: 0.1},
    roughness: steelPlateRoughness,
    ao: steelPlateAo,
    metal: {metalness: 0.5},
@@ -98,7 +65,6 @@ let steelPrm = {
 let concretePrm = {
    map: concreteAlbedo,
    normal: concreteNormal,
-   displacement: {file: concreteHeight, scale: 0.1},
    roughness: concreteRoughness,
    ao: concreteAo,
    metal: {file: concreteMetalness, metalness: 0.5},
@@ -108,7 +74,6 @@ let concretePrm = {
 let brickPrm = {
    map: brickAlbedo,
    normal: brickNormal,
-   displacement: {file: brickHeight, scale: 0.05},
    roughness: brickRoughness,
    ao: brickAo,
    reps: {x: 0.25, y: 0.25},
@@ -127,45 +92,56 @@ let goldPrm = {
    reps: {x: 0.5, y: 0.5}
 };
 
-let verticalLinedMetalPrm = {
-   map: verticalLinedMetalAlbedo,
-   normal: verticalLinedMetalNormal,
-   displacement: {file: verticalLinedMetalHeight, scale: 0.1},
-   roughness: verticalLinedMetalRoughness,
-   metal: {file: verticalLinedMetalMetalness, metalness: 0.5},
-   ao: verticalLinedMetalAo,
+let plasterPrm = {
+   map: plasterAlbedo,
+   normal: plasterNormal,
+   roughness: plasterRoughness,
    reps: {x: 0.5, y: 0.5}
 };
 
+let scratchedPlasticPrm = {
+   map: scratchedPlasticAlbedo,
+   normal: scratchedPlasticNormal,
+   roughness: scratchedPlasticRoughness,
+   ao: scratchedPlasticAo,
+   reps: {x: 2, y: 2}
+};
+
 let brassPrm = {
-   color: 0xAAAAAA,
    map: brassAlbedo,
    normal: brassNormal,
    roughness: brassRoughness,
-   metal: {file: brassMetalness, metalness: 0.5},
    ao: brassAo,
+   metal: {metalness: 0.8},
    reps: {x: 1, y: 1}
 };
 
 let scuffedMetalPrm = {
    map: scuffedMetalAlbedo,
    normal: scuffedMetalNormal,
-   displacement: {file: scuffedMetalHeight, scale: 0.1},
    roughness: scuffedMetalRoughness,
-   metal: {file: scuffedMetalMetalness, metalness: .8},
    ao: scuffedMetalAo,
+   metal: {metalness: 0.7},
    reps: {x: 1, y: 1}
 };
 
 let checkerboardPrm = {
    map: checkerboardAlbedo,
    normal: checkerboardNormal,
-   displacement: {file: checkerboardHeight, scale: 0.1},
    roughness: checkerboardRoughness,
-   metal: {file: checkerboardMetalness, metalness: 0.5},
    ao: checkerboardAo,
+   metal: {metalness: 0},
    reps: {x: 1, y: 1}
-}
+};
+
+let olderWoodFloorPrm = {
+   map: olderWoodFloorAlbedo,
+   normal: olderWoodFloorNormal,
+   roughness: olderWoodFloorRoughness,
+   ao: olderWoodFloorAo,
+   metal: {metalness: 0},
+   reps: {x: 0.5, y: 0.5}
+};
 
 // Return promise that awaits load of all parameters in the object passed.
 // "Then" on this promise yields an object of loaded param objects, labelled
@@ -291,10 +267,18 @@ let goldMat = {
    }
 };
 
-let verticalLinedMetalMat = {
-   slow: loadModelPrms(verticalLinedMetalPrm),
+let plasterMat = {
+   slow: loadModelPrms(plasterPrm),
    fast: {
-      color: 0x1C1C1F,
+      color: 0xFFFFFF,
+      side: THREE.DoubleSide
+   }
+};
+
+let scratchedPlasticMat = {
+   slow: loadModelPrms(scratchedPlasticPrm),
+   fast: {
+      color: 0x000000,
       side: THREE.DoubleSide
    }
 };
@@ -323,4 +307,14 @@ let checkerboardMat = {
    }
 };
 
-export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat, verticalLinedMetalMat, brassMat, scuffedMetalMat, checkerboardMat};
+let olderWoodFloorMat = {
+   slow: loadModelPrms(olderWoodFloorPrm),
+   fast: {
+      color: 0x5E412C,
+      side: THREE.DoubleSide
+   }
+};
+
+export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat, plasterMat,
+ scratchedPlasticMat, brassMat, scuffedMetalMat,
+ checkerboardMat, olderWoodFloorMat};
