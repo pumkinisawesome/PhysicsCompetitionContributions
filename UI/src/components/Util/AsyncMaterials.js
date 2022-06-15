@@ -30,6 +30,10 @@ import scratchedPlasticNormal from '../../assets/textures/scratchedPlastic/norma
 import scratchedPlasticRoughness from '../../assets/textures/scratchedPlastic/roughness.jpg';
 import scratchedPlasticAo from '../../assets/textures/scratchedPlastic/ao.jpg';
 
+import streakyPlasticAlbedo from '../../assets/textures/streakyPlastic/albedo.jpg';
+import streakyPlasticNormal from '../../assets/textures/streakyPlastic/normal.jpg';
+import streakyPlasticRoughness from '../../assets/textures/streakyPlastic/roughness.jpg';
+
 // The materials below are from https://freepbr.com/, and if they are to be used
 // comercially, they must be bought. The entire library can be bought for $9.
 
@@ -59,7 +63,7 @@ let steelPrm = {
    roughness: steelPlateRoughness,
    ao: steelPlateAo,
    metal: {metalness: 0.5},
-   reps: {x: 0.5, y: 0.5}
+   reps: {x: 0.5, y: 0.5}           // what fraction of the texture covers 1x1m
 };
 
 let concretePrm = {
@@ -103,8 +107,16 @@ let scratchedPlasticPrm = {
    map: scratchedPlasticAlbedo,
    normal: scratchedPlasticNormal,
    roughness: scratchedPlasticRoughness,
+   metal: {metalness: 0},
    ao: scratchedPlasticAo,
-   reps: {x: 2, y: 2}
+   reps: {x: 1, y: 1}
+};
+
+let streakyPlasticPrm = {
+   map: streakyPlasticAlbedo,
+   normal: streakyPlasticNormal,
+   roughness: streakyPlasticRoughness,
+   reps: {x: 1, y: 1}
 };
 
 let brassPrm = {
@@ -283,6 +295,14 @@ let scratchedPlasticMat = {
    }
 };
 
+let streakyPlasticMat = {
+   slow: loadModelPrms(streakyPlasticPrm),
+   fast: {
+      color: 0x000000,
+      side: THREE.DoubleSide
+   }
+};
+
 let brassMat = {
    slow: loadModelPrms(brassPrm),
    fast: {
@@ -316,5 +336,5 @@ let olderWoodFloorMat = {
 };
 
 export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat, plasterMat,
- scratchedPlasticMat, brassMat, scuffedMetalMat,
+ scratchedPlasticMat, streakyPlasticMat, brassMat, scuffedMetalMat,
  checkerboardMat, olderWoodFloorMat};
