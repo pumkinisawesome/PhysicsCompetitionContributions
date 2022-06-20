@@ -8,7 +8,7 @@ import { XRControllerModelFactory } from
 import {BounceSceneGroup} from './BounceSceneGroup';
 import {VRMovieController} from '../VRMovieController';
 
-class ControllerPickHelper extends THREE.EventDispatcher {
+class ControllerPickHelper extends THREE.EventDispatcher { 
    constructor(scene, renderer) {
       super();
       this.raycaster = new THREE.Raycaster();
