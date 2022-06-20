@@ -161,7 +161,7 @@ export class BounceSceneGroup {
           || evt.type === BounceMovie.cHitTarget) {
              this.ping.play();
          }
-         if (evt.type === BounceMovie.cTargetFade) {
+         if (evt.type === BounceMovie.cObstacleFade) {
             this.targets[evt.targetId].position.z
              = 3 * ballRadius * (1 - evt.fadeLevel);
          }
