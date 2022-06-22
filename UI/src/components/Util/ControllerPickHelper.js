@@ -3,7 +3,7 @@ import { XRControllerModelFactory } from
  'three/examples/jsm/webxr/XRControllerModelFactory.js';
 
 export class ControllerPickHelper extends THREE.EventDispatcher { 
-   constructor(scene, renderer) {
+   constructor(parent, renderer) {
       super();
       this.raycaster = new THREE.Raycaster();
       this.controllerToObjectMap = new Map();
@@ -44,7 +44,7 @@ export class ControllerPickHelper extends THREE.EventDispatcher {
          controller.addEventListener('select', selectListener);
          controller.addEventListener('selectstart', selectListener);
          controller.addEventListener('selectend', endListener);
-         scene.add(controller);
+         parent.add(controller);
 
          // Get and add models to controllers
          const controllerModelFactory = new XRControllerModelFactory();
@@ -52,7 +52,7 @@ export class ControllerPickHelper extends THREE.EventDispatcher {
          const model = controllerModelFactory.
           createControllerModel(controllerGrip);
          controllerGrip.add(model);
-         scene.add(controllerGrip);
+         parent.add(controllerGrip);
  
          // Create a line for each controller
          const line = new THREE.Line(pointerGeometry);
