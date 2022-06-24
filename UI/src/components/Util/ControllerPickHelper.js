@@ -46,18 +46,19 @@ export class ControllerPickHelper extends THREE.EventDispatcher {
          controller.addEventListener('selectend', endListener);
          parent.add(controller);
 
-         // Get and add models to controllers
-         const controllerModelFactory = new XRControllerModelFactory();
-         const controllerGrip = renderer.xr.getControllerGrip(i);
-         const model = controllerModelFactory.
-          createControllerModel(controllerGrip);
-         controllerGrip.add(model);
-         parent.add(controllerGrip);
+         // // Get and add models to controllers
+         // const controllerModelFactory = new XRControllerModelFactory();
+         // const controllerGrip = renderer.xr.getControllerGrip(i);
+         // const model = controllerModelFactory.
+         //  createControllerModel(controllerGrip);
+         // controllerGrip.add(model);
+         // parent.add(controllerGrip);
  
          // Create a line for each controller
          const line = new THREE.Line(pointerGeometry);
          line.scale.z = 5;
          controller.add(line);
+
          this.controllers.push({controller, line});
       }
    }
