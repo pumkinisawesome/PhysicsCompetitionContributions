@@ -128,6 +128,13 @@ let brassPrm = {
    reps: {x: 1, y: 1}
 };
 
+let ballPrm = {
+   map: brassAlbedo,
+   roughness: brassRoughness,
+   metal: {metalness: 0.8},
+   reps: {x: 1, y: 1}
+};
+
 let scuffedMetalPrm = {
    map: scuffedMetalAlbedo,
    normal: scuffedMetalNormal,
@@ -311,6 +318,14 @@ let brassMat = {
    }
 };
 
+let ballMat = {
+   slow: loadModelPrms(ballPrm),
+   fast: {
+      color: 0x5A482D,
+      side: THREE.DoubleSide
+   }
+};
+
 let scuffedMetalMat = {
    slow: loadModelPrms(scuffedMetalPrm),
    fast: {
@@ -336,5 +351,5 @@ let olderWoodFloorMat = {
 };
 
 export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat, plasterMat,
- scratchedPlasticMat, streakyPlasticMat, brassMat, scuffedMetalMat,
+ scratchedPlasticMat, streakyPlasticMat, brassMat, ballMat, scuffedMetalMat,
  checkerboardMat, olderWoodFloorMat};
