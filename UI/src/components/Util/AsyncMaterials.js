@@ -86,7 +86,6 @@ let brickPrm = {
    roughness: brickRoughness,
    ao: brickAo,
    reps: {x: 0.25, y: 0.25},
-   shininess: 0.01,
 };
 
 let flatSteelPrm = {
@@ -134,6 +133,15 @@ let brassPrm = {
    metal: {metalness: 0.8},
    reps: {x: 1, y: 1}
 };
+
+let brassRodPrm = {
+   map: brassAlbedo,
+   normal: brassNormal,
+   roughness: brassRoughness,
+   ao: brassAo,
+   metal: {metalness: 1},
+   reps: {x: 1, y: 1}
+}
 
 let ballPrm = {
    map: brassAlbedo,
@@ -203,8 +211,6 @@ function loadModelPrms(prmSpec) {
    let reps = prmSpec.reps;
    let params = {color: 0xFFFFFF, side: prmSpec.side || THREE.DoubleSide};
    let loads = {};
-
-   console.log(prmSpec);
 
    if (prmSpec.color)
       params.color = prmSpec.color;
@@ -344,6 +350,14 @@ let brassMat = {
    }
 };
 
+let brassRodMat = {
+   slow: loadModelPrms(brassRodPrm),
+   fast: {
+      color: 0x5A482D,
+      side: THREE.DoubleSide
+   }
+}
+
 let ballMat = {
    slow: loadModelPrms(ballPrm),
    fast: {
@@ -385,5 +399,5 @@ let polishedWoodMat = {
 };
 
 export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat, plasterMat,
- scratchedPlasticMat, streakyPlasticMat, brassMat, ballMat, scuffedMetalMat,
- checkerboardMat, olderWoodFloorMat, polishedWoodMat};
+ scratchedPlasticMat, streakyPlasticMat, brassMat, brassRodMat, ballMat,
+ scuffedMetalMat, checkerboardMat, olderWoodFloorMat, polishedWoodMat};
