@@ -2,15 +2,13 @@
 
 export class VRMovieController {
    constructor(movie, setOffset) {
-      this.startTime = null;
-      this.currentOffset = 0;
+      this.startTime = null;     // Time when animation started in seconds
+      this.currentOffset = 0;    // Current time into movie
       this.playing = false;
       this.duration = movie.evts[movie.evts.length - 1].time;
-      this.rate = null;
+      this.rate = 1;
       this.setOffset = setOffset;
    }
-
-
 
    play(rate) {
       this.playing = true;
@@ -34,7 +32,7 @@ export class VRMovieController {
 
    animate(time) {
       if (this.playing) {
-         time /= 1000;
+         time /= 1000;  // Convert to seconds
 
          // If we are starting animation, set startTime
          if (this.startTime === null) {

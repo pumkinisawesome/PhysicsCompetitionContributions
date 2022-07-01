@@ -57,6 +57,11 @@ import olderWoodFloorNormal from '../../assets/textures/olderWoodFloor/normal.pn
 import olderWoodFloorAo from '../../assets/textures/olderWoodFloor/ao.png';
 import olderWoodFloorRoughness from '../../assets/textures/olderWoodFloor/roughness.png';
 
+import polishedWoodAlbedo from '../../assets/textures/polishedWood/albedo.jpeg';
+import polishedWoodNormal from '../../assets/textures/polishedWood/normal.jpeg';
+import polishedWoodRoughness from '../../assets/textures/polishedWood/roughness.jpeg';
+import polishedWoodAo from '../../assets/textures/polishedWood/ao.jpeg';
+
 let steelPrm = {
    map: steelPlateAlbedo,
    normal: steelPlateNormal,
@@ -81,6 +86,7 @@ let brickPrm = {
    roughness: brickRoughness,
    ao: brickAo,
    reps: {x: 0.25, y: 0.25},
+   shininess: 0.01,
 };
 
 let flatSteelPrm = {
@@ -123,6 +129,7 @@ let brassPrm = {
    map: brassAlbedo,
    normal: brassNormal,
    roughness: brassRoughness,
+   // roughnessAmmount: 0.7,
    ao: brassAo,
    metal: {metalness: 0.8},
    reps: {x: 1, y: 1}
@@ -162,6 +169,15 @@ let olderWoodFloorPrm = {
    reps: {x: 0.5, y: 0.5}
 };
 
+let polishedWoodPrm = {
+   map: polishedWoodAlbedo,
+   // normal: polishedWoodNormal,
+   roughness: polishedWoodRoughness,
+   roughnessAmmount: 0.7,
+   // ao: polishedWoodAo,
+   reps: {x: 2, y: 2}
+};
+
 // Return promise that awaits load of all parameters in the object passed.
 // "Then" on this promise yields an object of loaded param objects, labelled
 // by the param names, e.g. steelPrm, concretePrm, etc.  Use these to make
@@ -188,6 +204,8 @@ function loadModelPrms(prmSpec) {
    let params = {color: 0xFFFFFF, side: prmSpec.side || THREE.DoubleSide};
    let loads = {};
 
+   console.log(prmSpec);
+
    if (prmSpec.color)
       params.color = prmSpec.color;
 
@@ -208,10 +226,18 @@ function loadModelPrms(prmSpec) {
    if (prmSpec.roughness)
       loads.roughnessMap = loadTextureAsync(prmSpec.roughness, reps);
 
+   if (prmSpec.roughnessAmmount)
+      params.roughness = prmSpec.roughnessAmmount;
+
    if (prmSpec.metal) {
       if (prmSpec.metal.file)
          loads.metalnessMap = loadTextureAsync(prmSpec.metal.file, reps);
       params.metalness = prmSpec.metal.metalness;
+   }
+
+   if (prmSpec.shininess) {
+      params.shininess = prmSpec.shininess;
+      console.log('Shiny!');
    }
    
    return Promise.all(Object.values(loads))
@@ -350,6 +376,14 @@ let olderWoodFloorMat = {
    }
 };
 
+let polishedWoodMat = {
+   slow: loadModelPrms(polishedWoodPrm),
+   fast: {
+      color: 0x3F2736,
+      side: THREE.DoubleSide
+   }
+};
+
 export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat, plasterMat,
  scratchedPlasticMat, streakyPlasticMat, brassMat, ballMat, scuffedMetalMat,
- checkerboardMat, olderWoodFloorMat};
+ checkerboardMat, olderWoodFloorMat, polishedWoodMat};
