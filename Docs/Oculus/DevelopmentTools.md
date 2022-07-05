@@ -29,7 +29,7 @@ adb reverse tcp:3001 tcp:3001
 > An application for sideloading Android APKs to the headset.
 
 Instructions on how to setup SideQuest can be found [here](https://sidequestvr.com/setup-howto). Ignore the Easy Installer, as that can't sideload the needed 
-development apps
+development apps.
 
 
 ## OVR Metrics Tool
