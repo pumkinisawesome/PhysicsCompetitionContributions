@@ -3,7 +3,7 @@ import { XRControllerModelFactory } from
  'three/examples/jsm/webxr/XRControllerModelFactory.js';
 
 export class ControllerPickHelper extends THREE.EventDispatcher { 
-   constructor(parent, renderer, camera, guiPrms) {
+   constructor(parent, renderer) {
       super();
       this.parent = parent;
       this.renderer = renderer;
