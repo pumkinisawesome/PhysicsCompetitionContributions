@@ -62,23 +62,23 @@ import polishedWoodNormal from '../../assets/textures/polishedWood/normal.jpeg';
 import polishedWoodRoughness from '../../assets/textures/polishedWood/roughness.jpeg';
 import polishedWoodAo from '../../assets/textures/polishedWood/ao.jpeg';
 
-let steelPrm = {
-   map: steelPlateAlbedo,
-   normal: steelPlateNormal,
-   roughness: steelPlateRoughness,
-   ao: steelPlateAo,
-   metal: {metalness: 0.5},
-   reps: {x: 0.5, y: 0.5}           // what fraction of the texture covers 1x1m
-};
+// let steelPrm = {
+//    map: steelPlateAlbedo,
+//    normal: steelPlateNormal,
+//    roughness: steelPlateRoughness,
+//    ao: steelPlateAo,
+//    metal: {metalness: 0.5},
+//    reps: {x: 0.5, y: 0.5}           // what fraction of the texture covers 1x1m
+// };
 
-let concretePrm = {
-   map: concreteAlbedo,
-   normal: concreteNormal,
-   roughness: concreteRoughness,
-   ao: concreteAo,
-   metal: {file: concreteMetalness, metalness: 0.5},
-   reps: {x: 0.5, y: 0.5}
-};
+// let concretePrm = {
+//    map: concreteAlbedo,
+//    normal: concreteNormal,
+//    roughness: concreteRoughness,
+//    ao: concreteAo,
+//    metal: {file: concreteMetalness, metalness: 0.5},
+//    reps: {x: 0.5, y: 0.5}
+// };
 
 let brickPrm = {
    map: brickAlbedo,
@@ -88,18 +88,18 @@ let brickPrm = {
    reps: {x: 0.25, y: 0.25},
 };
 
-let flatSteelPrm = {
-   roughness: flatSteelRoughness,
-   metal: {metalness: 0.5},
-   reps: {x: 0.5, y: 0.5}
-};
+// let flatSteelPrm = {
+//    roughness: flatSteelRoughness,
+//    metal: {metalness: 0.5},
+//    reps: {x: 0.5, y: 0.5}
+// };
 
-let goldPrm = {
-   map: goldAlbedo,
-   roughness: goldRoughness,
-   metal: {metalness: 0.5},
-   reps: {x: 0.5, y: 0.5}
-};
+// let goldPrm = {
+//    map: goldAlbedo,
+//    roughness: goldRoughness,
+//    metal: {metalness: 0.5},
+//    reps: {x: 0.5, y: 0.5}
+// };
 
 let plasterPrm = {
    map: plasterAlbedo,
@@ -143,12 +143,12 @@ let brassRodPrm = {
    reps: {x: 1, y: 1}
 }
 
-let ballPrm = {
-   map: brassAlbedo,
-   roughness: brassRoughness,
-   metal: {metalness: 0.8},
-   reps: {x: 1, y: 1}
-};
+// let ballPrm = {
+//    map: brassAlbedo,
+//    roughness: brassRoughness,
+//    metal: {metalness: 0.8},
+//    reps: {x: 1, y: 1}
+// };
 
 let scuffedMetalPrm = {
    map: scuffedMetalAlbedo,
@@ -159,14 +159,14 @@ let scuffedMetalPrm = {
    reps: {x: 1, y: 1}
 };
 
-let checkerboardPrm = {
-   map: checkerboardAlbedo,
-   normal: checkerboardNormal,
-   roughness: checkerboardRoughness,
-   ao: checkerboardAo,
-   metal: {metalness: 0},
-   reps: {x: 1, y: 1}
-};
+// let checkerboardPrm = {
+//    map: checkerboardAlbedo,
+//    normal: checkerboardNormal,
+//    roughness: checkerboardRoughness,
+//    ao: checkerboardAo,
+//    metal: {metalness: 0},
+//    reps: {x: 1, y: 1}
+// };
 
 let olderWoodFloorPrm = {
    map: olderWoodFloorAlbedo,
@@ -286,37 +286,37 @@ let brickMat = {
    }
 };
 
-let steelMat = {
-   slow: loadModelPrms(steelPrm),
-   fast: {
-      color: 0x838381,
-      side: THREE.DoubleSide
-   }
-};
+// let steelMat = {
+//    slow: loadModelPrms(steelPrm),
+//    fast: {
+//       color: 0x838381,
+//       side: THREE.DoubleSide
+//    }
+// };
 
-let concreteMat = {
-   slow: loadModelPrms(concretePrm),
-   fast: {
-      color: 0x5F5F5F,
-      side: THREE.DoubleSide
-   }
-};
+// let concreteMat = {
+//    slow: loadModelPrms(concretePrm),
+//    fast: {
+//       color: 0x5F5F5F,
+//       side: THREE.DoubleSide
+//    }
+// };
 
-let flatSteelMat = {
-   slow: loadModelPrms(flatSteelPrm),
-   fast: {
-      color: 0x5F5F5F,
-      side: THREE.DoubleSide
-   }
-};
+// let flatSteelMat = {
+//    slow: loadModelPrms(flatSteelPrm),
+//    fast: {
+//       color: 0x5F5F5F,
+//       side: THREE.DoubleSide
+//    }
+// };
 
-let goldMat = {
-   slow: loadModelPrms(goldPrm),
-   fast: {
-      color: 0xC6994B,
-      side: THREE.DoubleSide
-   }
-};
+// let goldMat = {
+//    slow: loadModelPrms(goldPrm),
+//    fast: {
+//       color: 0xC6994B,
+//       side: THREE.DoubleSide
+//    }
+// };
 
 let plasterMat = {
    slow: loadModelPrms(plasterPrm),
@@ -326,13 +326,13 @@ let plasterMat = {
    }
 };
 
-let scratchedPlasticMat = {
-   slow: loadModelPrms(scratchedPlasticPrm),
-   fast: {
-      color: 0x000000,
-      side: THREE.DoubleSide
-   }
-};
+// let scratchedPlasticMat = {
+//    slow: loadModelPrms(scratchedPlasticPrm),
+//    fast: {
+//       color: 0x000000,
+//       side: THREE.DoubleSide
+//    }
+// };
 
 let streakyPlasticMat = {
    slow: loadModelPrms(streakyPlasticPrm),
@@ -358,13 +358,13 @@ let brassRodMat = {
    }
 }
 
-let ballMat = {
-   slow: loadModelPrms(ballPrm),
-   fast: {
-      color: 0x5A482D,
-      side: THREE.DoubleSide
-   }
-};
+// let ballMat = {
+//    slow: loadModelPrms(ballPrm),
+//    fast: {
+//       color: 0x5A482D,
+//       side: THREE.DoubleSide
+//    }
+// };
 
 let scuffedMetalMat = {
    slow: loadModelPrms(scuffedMetalPrm),
@@ -374,13 +374,13 @@ let scuffedMetalMat = {
    }
 };
 
-let checkerboardMat = {
-   slow: loadModelPrms(checkerboardPrm),
-   fast: {
-      color: 0x777777,
-      side: THREE.DoubleSide
-   }
-};
+// let checkerboardMat = {
+//    slow: loadModelPrms(checkerboardPrm),
+//    fast: {
+//       color: 0x777777,
+//       side: THREE.DoubleSide
+//    }
+// };
 
 let olderWoodFloorMat = {
    slow: loadModelPrms(olderWoodFloorPrm),
@@ -398,6 +398,5 @@ let polishedWoodMat = {
    }
 };
 
-export {steelMat, concreteMat, brickMat, flatSteelMat, goldMat, plasterMat,
- scratchedPlasticMat, streakyPlasticMat, brassMat, brassRodMat, ballMat,
- scuffedMetalMat, checkerboardMat, olderWoodFloorMat, polishedWoodMat};
+export {brickMat, plasterMat, streakyPlasticMat, brassMat, scuffedMetalMat,
+ olderWoodFloorMat, polishedWoodMat, brassRodMat};
