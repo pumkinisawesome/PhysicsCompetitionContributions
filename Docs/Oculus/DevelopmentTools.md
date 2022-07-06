@@ -4,15 +4,18 @@
 > Enables unofficial applications to be sideloaded, and for settings to be
 > modified
 1. Go to [this website](https://developer.oculus.com/manage/organizations/create/), and register as a Developer.
-2. Open up the Oculus app on your phone that you used to setup the headset, and
-open settings.
+2. Open up the Oculus app on your phone that you used to setup the headset, and get to the devices choices (hamburger leads to choices including devices)
 3. Select the headset from the device list and connect to it.
 4. Tap More Settings, then Developer Mode, and enable it.
 5. Exit settings on the app, and reboot the headset using the side power button.
+6. After restart, confirm in Oculus settings that Experimental is one of the
+panels.  This confirms you are in developer mode.
 
 ## Android Debug Bridge
 > This allows for port forwarding, so that localhost can be accessed.
-1. Download and install [Android Debug Bridge](https://developer.android.com/studio/command-line/adb.html).
+1. Download and install [Android Debug Bridge]
+  * [Installation](https://www.xda-developers.com/install-adb-windows-macos-linux/)  or just apt-get install android-tools-adb
+  * [Instructions for use](https://developer.android.com/studio/command-line/adb.html).
 2. Plug in the headset to the computer using a USB-C cable.
 3. Run the following command: `adb devices`, which should show the connected
 headset. 
