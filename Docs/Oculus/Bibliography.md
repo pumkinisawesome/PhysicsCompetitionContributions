@@ -17,8 +17,7 @@ https://threejs.org/docs/#manual/en/introduction/How-to-create-VR-content
 Describes the steps to add VR functionality into an existing three.js scene. 
 This seems very simple, as it only requires ~5 lines from the look of it. 
 
-[Controllers and Locomotion]
-(https://medium.com/samsung-internet-dev/vr-locomotion-740dafa85914)
+[Controllers and Locomotion](https://medium.com/samsung-internet-dev/vr-locomotion-740dafa85914)
 
 An article describing how someone added support for VR controllers and 
 locomotion into a three.js scene. It describes these steps:
