@@ -1,0 +1,31 @@
+<!--
+   This test program is designed to be run using the VSCode extension Live
+   Server. This allows html files to be test ran in the browser quickly and
+   easily. 
+
+   This uses ThreeJS to test whether setting colorWrite to false allows for a
+   hole to be punched through another mesh, and whether this can be used for
+   to build Constructive Solid Geometry.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>ColorWrite test</title>
+   <link rel="stylesheet" type="text/css" href="style.css">
+   <script type="importmap">
+      {
+         "imports": {
+            "three": "https://threejs.org/build/three.module.js",
+         }
+      }
+   </script>
+   <script type="module" src="script.js"></script>
+   <!-- <script type="module" src="script old.js"></script> -->
+</head>
+<body>
+   <canvas id="c"></canvas>
+</body>
+</html>
