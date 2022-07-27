@@ -77,11 +77,21 @@ export class BounceSceneGroup {
          this.roomDepth = BounceSceneGroup.roomDepth3D;
 
       if (listener) {
-         this.ping = new THREE.PositionalAudio(listener);
+         this.listener = listener;
+         this.pendingAudio = [];
 
          const audioLoader = new THREE.AudioLoader();
          audioLoader.load(pingAudio, (buffer) => {
-            this.ping.setBuffer(buffer);
+            this.pingBuffer = buffer;
+            this.pendingAudio.forEach(audio => {
+               audio.setBuffer(buffer);
+
+               // Audio does a weird stereo pan thing when first played. 
+               // Tried .UpdateMatrixWorld(), and console.logging the whole
+               // audio object to look for differences, but nothing worked. 
+               // This audio thing seems to only happen after listener
+               // position has changed, so that's what to investigate next.
+            });
          });
       }
 
@@ -426,10 +436,10 @@ export class BounceSceneGroup {
          // If the event is obstacle creation, add the obstacle to the scene
          if (evt.type === BounceMovie.cMakeBarrier
           || evt.type === BounceMovie.cMakeTarget) {
-            // Add the indicated barrier to the scene
             const width = evt.hiX - evt.loX;
             const height = evt.hiY - evt.loY;
             let objGroup;
+
             if (evt.type === BounceMovie.cMakeTarget) {
                objGroup = this.createObstacle(
                 'target', this.rig, {
@@ -437,6 +447,14 @@ export class BounceSceneGroup {
                    height: height,
                    depth: trgDepth,
                 }, brassMat);
+               // Create hit sound effect
+               objGroup.ping = new THREE.PositionalAudio(this.listener);
+               if (this.pingBuffer) {
+                  objGroup.ping.setBuffer(this.pingBuffer);
+               }
+               else
+                  this.pendingAudio.push(objGroup.ping);
+               objGroup.getObjectByName('wallRing').add(objGroup.ping);
             }
             else if (evt.type === BounceMovie.cMakeBarrier) {
                objGroup = this.createObstacle(
@@ -467,12 +485,8 @@ export class BounceSceneGroup {
          // If the event is obstacle hit, play fx
          if (evt.type === BounceMovie.cHitBarrier
           || evt.type === BounceMovie.cHitTarget) {
-            if (this.ping) {
-               // Attach positional ping to stationary part of obstacle
-               this.obstacles[evt.targetId].parent.getObjectByName('wallRing')
-                .add(this.ping);
-               this.ping.play();
-            }
+            if (this.obstacles[evt.targetId].parent.ping.buffer)
+               this.obstacles[evt.targetId].parent.ping.play();
          }
          if (evt.type === BounceMovie.cObstacleFade) {
             this.obstacles[evt.targetId].position.z =
