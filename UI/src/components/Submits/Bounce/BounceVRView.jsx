@@ -48,6 +48,8 @@ export class BounceVRView extends React.Component {
       renderer.physicallyCorrectLights = true;
       renderer.shadowMap.type = THREE.BasicShadowMap;
       renderer.xr.enabled = true;
+
+      // Scaling down render size increase performance without noticable loss
       renderer.xr.setFramebufferScaleFactor(0.8);
 
       // Create button to initiate a VR session
@@ -102,12 +104,12 @@ export class BounceVRView extends React.Component {
       }
 
       // When controllers connect, determine handedness
-      vrControl.controllers[0].addEventListener('connected', (event) => {
-         setControllerHandedness(event, 0);
-      });
-      vrControl.controllers[1].addEventListener('connected', (event) => {
-         setControllerHandedness(event, 1);
-      });
+      for (let i = 0; i < 2; i++) {
+         vrControl.controllers[i].addEventListener('connected', (event) => {
+            setControllerHandedness(event, i);
+            console.log(controllers);
+         });
+      }
 
       // Rerender when all pending textures are loaded to show new textures.
       Promise.all(sceneGroup.getPendingPromises()).then(() => {
