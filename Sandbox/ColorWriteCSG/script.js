@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-CameraControls.install({THREE});
+// CameraControls.install({THREE});
 
 function main() {
    const canvas = document.querySelector('#c');
@@ -35,13 +35,14 @@ function main() {
    block.renderOrder = 102;
 
    const cutoutCylinder = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.5, 0.5, 0.50005, 32, 1, false, 0, Math.PI + 1),
+    new THREE.CylinderGeometry(0.5, 0.5, 0.50005, 32, 1, false, 0, Math.PI / 3),
    //  new THREE.CylinderGeometry(0.5, 0.5, 0.50005, 32),
     new THREE.MeshPhongMaterial({colorWrite: false}));
    cutoutCylinder.position.set(0, 0, -3);
    cutoutCylinder.rotateX(Math.PI / 2);
    scene.add(cutoutCylinder);
    cutoutCylinder.renderOrder = 101;
+   console.log(cutoutCylinder);
 
    const cylinder = new THREE.Mesh(
     new THREE.CylinderGeometry(0.5, 0.5, 0.5, 32, 1, true),
