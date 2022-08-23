@@ -209,7 +209,7 @@ function loadMatPrms(prmSpecs) {
 
 function loadModelPrms(prmSpec) {
    let reps = prmSpec.reps;
-   let params = {color: 0xFFFFFF, side: prmSpec.side || THREE.DoubleSide};
+   let params = {color: 0xFFFFFF, side: prmSpec.side || THREE.FrontSide};
    let loads = {};
 
    if (prmSpec.color)
@@ -282,7 +282,6 @@ let brickMat = {
    slow: loadModelPrms(brickPrm),
    fast: {
       color: 0x9F8779,
-      side: THREE.DoubleSide
    }
 };
 
@@ -322,7 +321,7 @@ let plasterMat = {
    slow: loadModelPrms(plasterPrm),
    fast: {
       color: 0xFFFFFF,
-      side: THREE.DoubleSide
+      // side: THREE.DoubleSide
    }
 };
 
@@ -398,5 +397,17 @@ let polishedWoodMat = {
    }
 };
 
+let colorWriteMat = {
+   fast: {
+      colorWrite: false
+   }
+};
+
+let laserMat = {
+   fast: {
+      color: 0xFF0000
+   }
+};
+
 export {brickMat, plasterMat, streakyPlasticMat, brassMat, scuffedMetalMat,
- olderWoodFloorMat, polishedWoodMat, brassRodMat};
+ olderWoodFloorMat, polishedWoodMat, brassRodMat, colorWriteMat, laserMat};
