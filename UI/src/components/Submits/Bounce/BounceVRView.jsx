@@ -306,7 +306,7 @@ export class BounceVRView extends React.Component {
          light.position.set(
           (i + 0.5) * (roomWidth / numOfLights),
           roomHeight - 3, roomDepth - 1);
-         light.power = totalPower / numOfLights;  // CAS FIX constants...
+         light.power = totalPower / numOfLights;
          light.shadow.mapSize.width = 1024;
          light.shadow.mapSize.height = 1024;
          light.shadow.radius = 1;

@@ -6,9 +6,6 @@ import {BounceSceneGroup} from './BounceSceneGroup';
 
 CameraControls.install({THREE});
 
-// CAS FIX: Do we need the BounceOld*.jsx files still?  Seems like we left them 
-// behind a while ago....
-
 // Display a room with a "rig" on one wall.  The rig has the launcher, targets,
 // obstacles, and ball.  All 3JS units are meters.
 export class Bounce3DView extends React.Component {
@@ -110,7 +107,6 @@ export class Bounce3DView extends React.Component {
       cameraControls.colliderMeshes = this.state.sceneGroup.getColliderMeshes();
 
       cameraControls.addEventListener("control", () => {
-
          cameraControls.update(1);   // Needed w/nonzero param
          this.state.renderer.render(this.state.scene, this.state.camera);
          // console.log(this.state.renderer.info);
@@ -139,7 +135,6 @@ export class Bounce3DView extends React.Component {
          rtn = Bounce3DView.getInitState(newProps.movie);
       return Bounce3DView.setOffset(rtn, newProps.offset);
    }
-
 
    // Advance/retract |state| so that state reflects all and only those events
    // in |movie| with time <= |timeStamp|.  Assume existing |state| was built
