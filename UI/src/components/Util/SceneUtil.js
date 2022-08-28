@@ -100,6 +100,22 @@ export function makeCircleElement(
    return circle;
 }
 
+export function makeExtrudeElement(
+ name, parent, {shape, options}, {matPrms, offset}, mats) {
+   const extrude = new THREE.Mesh(
+    new THREE.ExtrudeGeometry(shape, options),
+    new THREE.MeshLambertMaterial(matPrms.fast));
+   extrude.name = name;
+   parent.add(extrude);
+
+   addMaterial(extrude, {
+      x: 1,
+      y: 1
+   }, {matPrms, offset}, mats);
+
+   return extrude;
+}
+
 export function makeLatheElement(
  name, parent, {points, maxRadius, segments, phiLength}, {matPrms, offset}, mats) {
    const lathe = new THREE.Mesh(
