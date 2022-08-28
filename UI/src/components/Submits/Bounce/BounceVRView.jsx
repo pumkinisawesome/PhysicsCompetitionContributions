@@ -66,7 +66,7 @@ export class BounceVRView extends React.Component {
       });
 
       const {controlBlock, controlButtons} = BounceVRView.makeControls(
-       0.4, movieController, cameraGroup);
+       0.4, movieController, camera);
 
       // Create VR controller to handle controllers and relevant functions
       const vrControl = VRControl(renderer, camera, scene);
@@ -132,9 +132,11 @@ export class BounceVRView extends React.Component {
 
    // JSB - shorten so under 100 lines
    // CAS FIX: Yes, please do.
-   static makeControls(guiScale, movieController, cameraGroup) {
+   static makeControls(guiScale, movieController, camera) {
       const {balconyNum, balconyHeight, balconyDepth, roomDepthVR, roomWidth}
        = BounceSceneGroup;
+
+      const cameraGroup = camera.parent;
 
       // Create gui block to hold buttons
       const controlBlock = new ThreeMeshUI.Block({
@@ -251,10 +253,14 @@ export class BounceVRView extends React.Component {
          attributes: selectedStateAttributes,
          onSet: () => {
             console.log('Up');
-            cameraGroup.position.x = roomWidth / 2;
+            cameraGroup.position.x = roomWidth / 2
+             - camera.position.x;
             if (cameraGroup.position.y < balconyHeight * balconyNum)
                cameraGroup.position.y += balconyHeight;
-            cameraGroup.position.z = roomDepthVR - balconyDepth + 0.5;
+            cameraGroup.position.z = roomDepthVR - balconyDepth + 0.5
+             - camera.position.z;
+
+            console.log(cameraGroup.position);
          }
       });
       smallButtonUp.setupState(hoveredStateAttributes);
