@@ -25,7 +25,7 @@ learned/improved these skills:
   - Graphics optimisation
   - [`three-mesh-ui`](https://github.com/felixmariotto/three-mesh-ui) (a library for creating VR user interfaces) and basic UI design
   - Raycasting (for VR controller pointer)
-- React (component mounting, frame rendering)
+- React
   - Component mounting
   - Frame rendering
 - Git/GitHub workflows
