@@ -32,7 +32,14 @@ learned/improved these skills:
   - Merge conflicts and resolution
   - GitHub issues, assigning and resolving
 - General programming techniques
-  - Working with a large codebase written by other people
+  - Working with other programmers
+    - Working within a large codebase written by other people
+    - Learning and following existing code formatting styles
+  - Bugs
+    - Use of debugging tools
+      - Breakpoints
+      - Watching variables/objects
+    - Identifying and improving legibility of code and documentation
   - Use of AI as an assistant, not for writing code for me, but for:
     - Examples of relevant Three.js code
     - Narrowing down bug possibilities
@@ -50,9 +57,15 @@ knowledge visually and satisfyingly in a high-school level class. The teacher
 could assign physics problems as homework, or create teams of students as a
 competition.
 
-There were three types of physics problem, of which I mostly worked on:
+There were three types of physics problem, and I mostly worked on:
 
 _Bounce_: A ball is fired from a cannon, and the students must calculate the
 required exit velocity of the cannonball to bounce off of certain platforms
 in the shortest time and number of cannon shots. Once a platform was hit,
-it would retract so that it couldn't be hit again in that attempt.
+it would retract so that it couldn't be hit again in that attempt. The values
+that the students had to submit were:
+
+- The velocity of the ball when leaving the barrel
+- The X and Y coordinates where the ball would leave the frame (which would
+  either be on the far right side, or falling out of the bottom of frame)
+- The time that the ball exits the frame
