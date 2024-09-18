@@ -50,7 +50,7 @@ While I can't share the whole project, I can share all of the files I wrote
 myself, and I will give a description of the project structure to give an idea
 of how my code fitted in.
 
-## Description
+## Project description
 
 `PhysicsCompetition` is a tool designed to assist in learning and demonstrating
 knowledge visually and satisfyingly in a high-school level class. The teacher
@@ -69,3 +69,53 @@ that the students had to submit were:
 - The X and Y coordinates where the ball would leave the frame (which would
   either be on the far right side, or falling out of the bottom of frame)
 - The time that the ball exits the frame
+
+When I joined the project, there were two ways to view the results of your
+submission in real time: an SVG animation that showed the path the ball took
+along with the coordinates of each obstacle hit, or a 3D view using Three.js
+and PBR materials. I added a third view to that, enabling a 3D view to be
+opened in a headset like the Oculus/Meta Quest 2 by just visiting the
+web page and pressing a button.
+
+## My roles in the project
+
+I had two main roles to play in the developoment of this project:
+
+- to redesign the currently existing Three.js environment being used for the
+  Bounce competition 3D view to be more visually pleasing, while refactoring
+  and cleaning up relevant code, and
+- to add a third view, VR, based on the existing 3D view, and deal with any
+  design or code changes related to this.
+
+### Environment redesign
+
+My first job, after reading through relevant parts of the codebase to become
+accustomed to how the product functioned, was to redesign the 3D room that the
+Bounce 3D View displayed in. At the time, it was a square room with simple
+concrete PBR textures on the walls, and a floating vertical 10m $`\times`$ 10m
+steel slab in the centre of the room as the backdrop of the simulation. The
+ball and obstacles all used the same steel texture, and the lighting was from a
+single point source at the top of the room.
+
+My brief for the redesign was to go with a more steampunk feel, with some
+material suggestions and design ideas being:
+
+- Brick
+- Dark wood
+- Brass
+- Warehouse-feel
+
+Up until this point, all of this scene creation code had been inside of
+`UI/src/components/Submits/Bounce/Bounce3DView.jsx`, and was taking up the
+majority of the file, so I moved it out to `BounceSceneGroup.js`, and organised
+the whole file into smaller functions to reduce repetition, and I tried to keep
+each function under 100 lines.
+
+### VR support
+
+## File and directory descriptions
+
+Here is a description of the purpose of each file and directory in this repo
+(ignoring irrelevant files in `Sandbox/`):
+
+### `Docs/Oculus/`
