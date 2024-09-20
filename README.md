@@ -77,6 +77,18 @@ and PBR materials. I added a third view to that, enabling a 3D view to be
 opened in a headset like the Oculus/Meta Quest 2 by just visiting the
 web page and pressing a button.
 
+### Project structure
+
+The project had three main components:
+
+- the REST server, which would handle queries to the SQL database for previous
+  submissions and results,
+- the Evaluation Client, a physics engine written in Java with the task of
+  handling all relevant calculations of ball physics and providing a "movie" of
+  frames for the ball's movement, and
+- the web ui frontend, which would provide the website the students would
+  access, and handle displaying the SVG or Three.js views of the competition.
+
 ## My roles in the project
 
 I had two main roles to play in the developoment of this project:
@@ -119,3 +131,10 @@ Here is a description of the purpose of each file and directory in this repo
 (ignoring irrelevant files in `Sandbox/`):
 
 ### `Docs/Oculus/`
+
+Documentation files for all of my work and research into implementing VR
+support for PhysicsCompetiton, specifically geared towards use with an
+Oculus Quest 2 (now called Meta Quest 2) or similar headset, but also
+investigating support for other headsets.
+
+#### ``
