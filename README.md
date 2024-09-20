@@ -137,4 +137,124 @@ support for PhysicsCompetiton, specifically geared towards use with an
 Oculus Quest 2 (now called Meta Quest 2) or similar headset, but also
 investigating support for other headsets.
 
-#### ``
+#### `Docs/Oculus/Bibliography.md`
+
+An annotated bibliography of different VR frameworks I could use to implement
+VR support for the project. I investigated different methods I could use to
+implement VR support, and collected resources and links to different tools and
+frameworks of the options I came across.
+
+#### `Docs/Oculus/DevelopmentTools.md`
+
+A file containing instructions for setting up an Oculus/Meta Quest 2 headset
+for developmental use, including sections for:
+
+- Enabling Developer Mode
+- Enabling, downloading and setting up Android Debug Bridge, to allow your
+  computer's localhost ports to be forwarded to the headset
+- Downloading SideQuest, allowing for sideloading APKs directly to the
+  headset over wifi or USB-C cable
+- Downloading and setting up OVR Metrics Tool, which displays metrics such as
+  frame rate, GPU and CPU usage as an overlay for debug purposes
+
+### `Sandbox/`
+
+A directory to hold experiments related to the project, such as testing
+Three.js tools.
+
+#### `Sandbox/ColorWriteCSG/`
+
+A test program, designed to be run using the VSCode extension Live Server,
+which allows html files to be test run in the browser quickly and easily.
+
+The purpose of the program was to test whether setting `colorWrite` to false
+would enable for one mesh to visually punch a hole through another mesh, and
+whether this could be used to build Constructive Solid Geometry.
+
+#### `Sandbox/VRRotatingCubes/`
+
+A test program, designed to be run using the VSCode extension Live Server,
+which allows html files to be test run in the browser quickly and easily.
+
+This program tests Three.js's WebXR integration to add VR/XR functionality to
+Three.js scenes. This integration allows for a VR user to navigate to a
+webpage in their headset, click a button labeled "Enter VR", and a VR session
+is initiated.
+
+The scene has several rotating cubes, which can be selected and moved by the
+user by using the index finger trigger on the controllers.
+
+The program can be tested without the need for a VR headset by using the
+WebXR APII Emulator extension on Chrome or any other Chromium based browser.
+
+##### `Sandbox/VRRotatingCubes/ControllerPickHelper.js`
+
+An early test version of
+[`UI/src/components/Util/ControllerPickHelper.js`](#uisrccomponentsutilcontrollerpickhelperjs)},
+which handles object selection using the VR headset's handheld controllers.
+
+On construction, `ControllerPickHelper` would get all active controllers, add
+event listeners for selection events, and add pointer lines to each controller.
+
+The `update` method would use raycasting to get the closest object that
+intersects with a ray cast from the front of the controller, and would make
+the selection line flash when an object was selected.
+
+### `UI/src/components/Util`
+
+A directory to hold relevant util functions and classes for use in multiple
+competition types and throughout multiple files.
+
+#### `UI/src/components/Util/AsyncMaterials.js`
+
+This file handles the creation of all of the materials used in the Three.js
+scenes throughout the project (mostly in Bounce, although some are in Land Grab
+as well). Loading all of these materials takes time, so each material returns
+an object with two properties: a promise for when the material's textures have
+loaded, and a simple HEX colour to use as a placeholder until the promise
+resolves.
+
+#### `UI/src/components/Util/SceneUtil.js`
+
+This file contains miscellaneous util functions related to image, material,
+texture and element handling. These functions include many functions for
+creating different types of element, removing boilerplate code and making
+scene creation code easier to read and write.
+
+There are also two other important functions:
+
+##### `generateArcPoints`
+
+This function is used to for easy lathe element creation. Lathe elements
+are constructed with an array of 2D xy coordinates, which are rotated around
+the y axis to create a 3D shape. The `generateArcPoints` function generates
+points for curved arcs, allowing for complex shapes to be created and added to
+the scene while keeping the code easy to read and write. This function is
+especially useful in the creation of lathe elements, as they take an array of
+points in their construction, and `generateArcPoints` can be used to create
+smoothly curved shapes.
+
+##### `fixLatheUVs`
+
+When a lathe element is created, if there are uneven gaps between the points
+array passed in during construction, the texture will be stretched unevenly.
+This function iterates through the points array, calculates the distance
+between neighbouring points, and stretches the uv values accordingly to even
+the texture back out again.
+
+#### `UI/src/components/Util/ControllerPickHelper.js`
+
+This class is the evolution of
+[`Sandbox/VRRotatingCubes/ControllerPickHelper.js`](#sandboxvrrotatingcubescontrollerpickhelperjs),
+but is capable of more than it's test predecessor.
+
+On construction, it handles the creation of the controllers, determines which
+hand each controller belongs to, and sets each up accordingly. It also creates
+a raycaster to be used in object selection later.
+
+On `update`, the raycaster is updated to the right controller's current
+position, and pointed in the direction the controller is. To handle the fact
+that not every object in the scene should be selectable, every selectable
+object is added to the `pickablesParent`, and the raycaster checks for
+intersection with all children of this parent. The closest intersected child
+is then set as selected.
