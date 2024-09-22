@@ -258,3 +258,56 @@ that not every object in the scene should be selectable, every selectable
 object is added to the `pickablesParent`, and the raycaster checks for
 intersection with all children of this parent. The closest intersected child
 is then set as selected.
+
+### `UI/src/components/Submits/`
+
+This directory houses all of the files related to the different competition
+types and their relevant submission web page files.
+
+Some other examples of files in this directory that aren't included in this
+repository because I didn't write them are:
+
+- `MovieController.jsx` — a React Component for displaying controls for
+  navigating the movies returned after submitting values for the competiton.
+  This controller would allow the user to play and pause the movie, scrub
+  through, and step through frame by frame.
+- `SbmPage.jsx` — a React Component that sets up a page for managing
+  submissions for a competition and team, including a submission dialog,
+  automatic polling for a test result on any standing submission, and a
+  display of the results.
+
+#### `UI/src/components/Submits/VRMovieController.js`
+
+This file is essentially a version of the `MovieController` mentioned in
+the description of [`UI/src/components/Submits/`](#uisrccomponentssubmits), but
+specifically designed for use in VR. It keeps track of the current time offset,
+and when the offset changes, it calls the `setOffset` function it is passed on
+construction. The `play`, `pause` and `animate` functions are called externally
+in `BounceVRView` by buttons on the UI element attached to the left VR
+controller.
+
+### `UI/src/components/Submits/Bounce/`
+
+This directory houses all of the files for the Bounce competition.
+
+Some files that aren't included in this repository because I didn't write them
+are:
+
+- `Bounce.jsx` — a React Component for the Bounce competition page of the
+  website, including displaying the submission summary table and housing
+  the competition views.
+- `BounceSVGView.jsx` — a React Component for the SVG view. This view shows the
+  ball and obstacles on a grid, with the coordinates of each corner of each
+  obstacle (screenshot below).
+
+<details>
+<summary>Screenshot of SVG view</summary>
+
+![A screenshot of the SVG view](media/BounceSVGView_ball_mid_bounce.jpeg)
+
+</details>
+
+#### `UI/src/components/Submits/Bounce/Bounce3DView.jsx`
+
+This file is a React Component that handles displaying the 3D view of the
+Bounce competition.
